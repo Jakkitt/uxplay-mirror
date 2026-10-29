@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>UxPlay Mirror – แชร์จอ iPhone ขึ้นคอม Windows ผ่าน AirPlay</title>
+<meta name="description" content="โปรแกรมฟรีแชร์จอ iPhone / iPad ขึ้นคอม Windows ผ่าน AirPlay ภาพลื่น 60 FPS ถ่ายภาพ อัดวิดีโอพร้อมเสียง ปากกาวาดบนจอ และหน้าจอเพลง">
+<meta property="og:title" content="UxPlay Mirror – แชร์จอ iPhone ขึ้นคอม Windows">
+<meta property="og:description" content="ฟรี โอเพนซอร์ส ภาพลื่น 60 FPS ถ่ายภาพ อัดวิดีโอ ปากกาวาดบนจอ">
+<meta property="og:image" content="assets/mirror.png">
+<link rel="icon" type="image/png" href="assets/icon-64.png">
+<link rel="apple-touch-icon" href="assets/icon-256.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0f14; --bg2: #12151c; --surface: #181c25; --surface2: #1f2430; --stroke: #2a303c;
+    --text: #eef2f7; --muted: #99a3b4; --accent: #4f86ff; --accent2: #7c4dff; --success: #22c55e; --warn: #f59e0b;
+    --radius: 18px;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: "IBM Plex Sans Thai", "Segoe UI", system-ui, sans-serif; line-height: 1.65; -webkit-font-smoothing: antialiased; }
+  a { color: inherit; }
+  img { max-width: 100%; display: block; }
+  .wrap { max-width: 1140px; margin: 0 auto; padding: 0 24px; }
+
+  /* nav */
+  nav { position: sticky; top: 0; z-index: 10; backdrop-filter: blur(14px); background: rgba(13, 15, 20, .72); border-bottom: 1px solid rgba(255,255,255,.06); }
+  nav .wrap { display: flex; align-items: center; gap: 28px; height: 64px; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; text-decoration: none; font-size: 17px; }
+  .brand img { width: 32px; height: 32px; }
+  nav .links { display: flex; gap: 22px; margin-left: auto; font-size: 15px; }
+  nav .links a { text-decoration: none; color: var(--muted); }
+  nav .links a:hover { color: var(--text); }
+  .gh { display: inline-flex; align-items: center; gap: 8px; padding: 7px 14px; border: 1px solid var(--stroke); border-radius: 10px; text-decoration: none; font-size: 14px; }
+  .gh:hover { background: var(--surface); }
+  @media (max-width: 760px) { nav .links { display: none; } }
+
+  /* hero */
+  .hero { position: relative; overflow: hidden; padding: 72px 0 40px; }
+  .hero::before { content: ""; position: absolute; inset: -30% -10% auto; height: 700px; background: radial-gradient(closest-side, rgba(79,134,255,.28), transparent 70%), radial-gradient(closest-side at 70% 40%, rgba(124,77,255,.25), transparent 70%); pointer-events: none; }
+  .hero .wrap { position: relative; display: grid; grid-template-columns: 1.05fr .95fr; gap: 48px; align-items: center; }
+  .pill { display: inline-flex; gap: 8px; align-items: center; padding: 5px 12px; border-radius: 999px; background: rgba(79,134,255,.14); color: #a9c3ff; font-size: 14px; font-weight: 500; }
+  .pill i { width: 7px; height: 7px; border-radius: 50%; background: var(--success); }
+  h1 { font-size: clamp(34px, 5vw, 54px); line-height: 1.2; margin: 18px 0 16px; letter-spacing: -.01em; }
+  h1 .grad { background: linear-gradient(90deg, #6aa1ff, #a77bff); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .lead { font-size: 18px; color: var(--muted); max-width: 540px; margin: 0 0 28px; }
+  .cta { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+  .btn { display: inline-flex; align-items: center; gap: 10px; padding: 14px 24px; border-radius: 14px; font-weight: 600; font-size: 17px; text-decoration: none; border: 0; cursor: pointer; }
+  .btn-primary { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff; box-shadow: 0 10px 30px rgba(79,134,255,.35); }
+  .btn-primary:hover { filter: brightness(1.08); }
+  .btn-ghost { border: 1px solid var(--stroke); color: var(--text); }
+  .btn-ghost:hover { background: var(--surface); }
+  .meta { margin-top: 14px; font-size: 14px; color: var(--muted); }
+  .hero-shot { position: relative; }
+  .hero-shot .app { border-radius: 14px; box-shadow: 0 30px 80px rgba(0,0,0,.55); border: 1px solid var(--stroke); }
+  .hero-shot .phone { position: absolute; width: 34%; right: -4%; bottom: -18%; border-radius: 10px; box-shadow: 0 30px 70px rgba(0,0,0,.65); border: 1px solid rgba(255,255,255,.08); }
+  @media (max-width: 900px) { .hero .wrap { grid-template-columns: 1fr; } .hero-shot { margin: 0 6% 70px 0; } }
+
+  section { padding: 72px 0; }
+  .section-title { text-align: center; margin-bottom: 40px; }
+  .section-title h2 { font-size: clamp(26px, 3.4vw, 36px); margin: 0 0 8px; }
+  .section-title p { color: var(--muted); margin: 0; }
+
+  /* features */
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  @media (max-width: 900px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 600px) { .grid { grid-template-columns: 1fr; } }
+  .card { background: var(--surface); border: 1px solid var(--stroke); border-radius: var(--radius); padding: 22px; }
+  .card .ic { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; background: rgba(79,134,255,.14); margin-bottom: 14px; }
+  .card .ic svg { width: 22px; height: 22px; stroke: #8fb1ff; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .card h3 { margin: 0 0 6px; font-size: 17px; }
+  .card p { margin: 0; color: var(--muted); font-size: 15px; }
+
+  /* gallery */
+  .tabs { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-bottom: 22px; }
+  .tab { padding: 8px 16px; border-radius: 10px; border: 1px solid var(--stroke); background: transparent; color: var(--muted); font: inherit; font-size: 15px; cursor: pointer; }
+  .tab[aria-selected="true"] { background: var(--surface2); color: var(--text); border-color: #3a4252; }
+  .stage { background: var(--bg2); border: 1px solid var(--stroke); border-radius: 22px; padding: 28px; display: grid; place-items: center; min-height: 520px; }
+  .stage img { max-height: 640px; width: auto; border-radius: 12px; box-shadow: 0 20px 60px rgba(0,0,0,.5); }
+  .caption { text-align: center; color: var(--muted); margin-top: 14px; }
+
+  /* steps */
+  .steps { counter-reset: s; display: grid; gap: 14px; max-width: 820px; margin: 0 auto; }
+  .step { counter-increment: s; display: grid; grid-template-columns: 44px 1fr; gap: 16px; background: var(--surface); border: 1px solid var(--stroke); border-radius: var(--radius); padding: 18px 20px; }
+  .step::before { content: counter(s); width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; font-weight: 700; background: linear-gradient(135deg, var(--accent), var(--accent2)); }
+  .step h3 { margin: 2px 0 4px; font-size: 17px; }
+  .step p { margin: 0; color: var(--muted); font-size: 15px; }
+  .step code, .faq code { background: var(--surface2); padding: 1px 7px; border-radius: 6px; font-size: 14px; color: #c8d6ff; }
+  .note { border-left: 3px solid var(--warn); background: rgba(245,158,11,.08); padding: 12px 16px; border-radius: 0 12px 12px 0; margin-top: 10px; color: #f5d9a8; font-size: 14.5px; }
+
+  .req { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; max-width: 900px; margin: 30px auto 0; }
+  @media (max-width: 760px) { .req { grid-template-columns: repeat(2, 1fr); } }
+  .req div { background: var(--surface); border: 1px solid var(--stroke); border-radius: 14px; padding: 14px 16px; font-size: 15px; }
+  .req b { display: block; font-size: 13px; color: var(--muted); font-weight: 500; }
+
+  /* faq */
+  .faq { max-width: 820px; margin: 0 auto; display: grid; gap: 10px; }
+  details { background: var(--surface); border: 1px solid var(--stroke); border-radius: 14px; padding: 4px 20px; }
+  summary { cursor: pointer; padding: 14px 0; font-weight: 600; list-style: none; display: flex; justify-content: space-between; gap: 16px; }
+  summary::after { content: "+"; color: var(--muted); font-size: 20px; line-height: 1; }
+  details[open] summary::after { content: "–"; }
+  details p { margin: 0 0 16px; color: var(--muted); }
+
+  .final { text-align: center; background: linear-gradient(135deg, rgba(79,134,255,.16), rgba(124,77,255,.16)); border: 1px solid var(--stroke); border-radius: 26px; padding: 52px 24px; }
+  .final h2 { margin: 0 0 10px; font-size: clamp(26px, 3.4vw, 36px); }
+  .final p { color: var(--muted); margin: 0 0 24px; }
+
+  footer { border-top: 1px solid var(--stroke); padding: 34px 0 48px; color: var(--muted); font-size: 14px; }
+  footer .wrap { display: grid; gap: 8px; }
+  footer a { color: #a9c3ff; }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a class="brand" href="#"><img src="assets/icon-64.png" alt="">UxPlay Mirror</a>
+    <div class="links">
+      <a href="#features">ฟีเจอร์</a>
+      <a href="#screens">ภาพตัวอย่าง</a>
+      <a href="#install">วิธีติดตั้ง</a>
+      <a href="#faq">คำถามที่พบบ่อย</a>
+    </div>
+    <a class="gh" id="repoLink" href="#">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+      GitHub
+    </a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <div>
+      <span class="pill"><i></i>ฟรี · โอเพนซอร์ส · ไม่มีโฆษณา</span>
+      <h1>แชร์จอ <span class="grad">iPhone</span><br>ขึ้นคอม Windows</h1>
+      <p class="lead">ใช้ AirPlay ที่มีอยู่แล้วใน iPhone และ iPad ไม่ต้องลงแอปเพิ่มในมือถือ ภาพลื่นสูงสุด 60 FPS พร้อมเสียง ถ่ายภาพหน้าจอ อัดวิดีโอ และวาดบนจอได้</p>
+      <div class="cta">
+        <a class="btn btn-primary dl" href="#install">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
+          ดาวน์โหลดสำหรับ Windows
+        </a>
+        <a class="btn btn-ghost" href="#install">วิธีติดตั้ง</a>
+      </div>
+      <div class="meta">Windows 10 / 11 (64-bit) · ตัวติดตั้งขนาด 0.4 MB · เวอร์ชัน 1.0</div>
+    </div>
+    <div class="hero-shot">
+      <img class="app" src="assets/home-mirroring.png" alt="หน้าหลักของ UxPlay Mirror ขณะกำลังแชร์จอ">
+      <img class="phone" src="assets/phone-window.png" alt="หน้าต่างภาพจาก iPhone">
+    </div>
+  </div>
+</header>
+
+<section id="features">
+  <div class="wrap">
+    <div class="section-title">
+      <h2>ทุกอย่างที่ต้องใช้ในโปรแกรมเดียว</h2>
+      <p>ออกแบบให้ใช้ง่ายสำหรับคนไทย ทุกเมนูเป็นภาษาไทย</p>
+    </div>
+    <div class="grid">
+      <div class="card"><div class="ic"><svg viewBox="0 0 24 24"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg></div><h3>ลื่นสูงสุด 60 FPS</h3><p>ถอดรหัสด้วยการ์ดจอ หน่วงต่ำ พร้อมตัวเลข FPS สดที่ iPhone ส่งมาจริง</p></div>
+      <div class="card"><div class="ic"><svg viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M3 8v8M21 8v8"/></svg></div><h3>ปรับหน้าต่างอัตโนมัติ</h3><p>หมุนเครื่องเป็นแนวนอน/แนวตั้ง หน้าต่างหมุนตาม ไม่มีขอบดำเกิน</p></div>
+      <div class="card"><div class="ic"><svg viewBox="0 0 24 24"><path d="M3 7h3l2-3h8l2 3h3v13H3z"/><circle cx="12" cy="13" r="4"/></svg></div><h3>ถ่ายภาพหน้าจอ</h3><p>กดครั้งเดียว บันทึกเป็นไฟล์และคัดลอกไปวางในแชตได้ทันที</p></div>
+      <div class="card"><div class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.5"/></svg></div><h3>อัดวิดีโอพร้อมเสียง</h3><p>อัดเป็น MP4 ด้วย NVIDIA NVENC หรือ Media Foundation อัดเฉพาะเสียงจาก iPhone</p></div>
+      <div class="card"><div class="ic"><svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg></div><h3>ปากกาวาดบนจอ</h3><p>ขีดเขียน ไฮไลต์ ทับภาพจาก iPhone เหมาะกับสอนใช้งานหรือพรีเซนต์</p></div>
+      <div class="card"><div class="ic"><svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></div><h3>หน้าจอเพลง</h3><p>เปิดเพลงผ่าน AirPlay แล้วขึ้นปกอัลบั้ม ชื่อเพลง และเวลาของเพลงสวย ๆ</p></div>
+      <div class="card"><div class="ic"><svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M7 14h10"/></svg></div><h3>คีย์ลัดจากทุกโปรแกรม</h3><p>Ctrl+Alt+S ถ่ายภาพ · Ctrl+Alt+R อัดวิดีโอ · Ctrl+Alt+D ปากกา · Ctrl+Alt+F เต็มจอ</p></div>
+      <div class="card"><div class="ic"><svg viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></div><h3>รหัส PIN</h3><p>กันคนอื่นในวง Wi-Fi เดียวกันแอบแชร์จอขึ้นคอมคุณ</p></div>
+      <div class="card"><div class="ic"><svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4"/><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/></svg></div><h3>ตรวจปัญหาให้อัตโนมัติ</h3><p>เช็ก Firewall, เครือข่าย Private และ Smart App Control พร้อมปุ่มพาไปแก้</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="screens" style="background: var(--bg2);">
+  <div class="wrap">
+    <div class="section-title">
+      <h2>ภาพตัวอย่าง</h2>
+      <p>ภาพจริงจากตัวโปรแกรม (หน้าจอมือถือในภาพเป็นภาพตัวอย่าง)</p>
+    </div>
+    <div class="tabs" role="tablist" id="tabs"></div>
+    <div class="stage"><img id="shot" src="assets/home-ready.png" alt=""></div>
+    <p class="caption" id="caption"></p>
+  </div>
+</section>
+
+<section id="install">
+  <div class="wrap">
+    <div class="section-title">
+      <h2>วิธีติดตั้ง</h2>
+      <p>ทำครั้งเดียว ใช้เวลาประมาณ 10–20 นาที (ระหว่างติดตั้งต้องต่ออินเทอร์เน็ต)</p>
+    </div>
+    <div class="steps">
+      <div class="step"><div><h3>ดาวน์โหลดตัวติดตั้ง</h3><p>กดปุ่ม <b>ดาวน์โหลดสำหรับ Windows</b> จะได้ไฟล์ <code>UxPlayMirrorSetup.exe</code></p></div></div>
+      <div class="step"><div><h3>เปิดไฟล์ติดตั้ง</h3><p>ถ้า Windows ขึ้นหน้าจอสีน้ำเงิน “Windows protected your PC” ให้กด <b>More info</b> แล้วกด <b>Run anyway</b></p>
+        <div class="note">คำเตือนนี้ขึ้นเพราะโปรแกรมยังไม่มีลายเซ็นดิจิทัลแบบเสียเงิน ซอร์สโค้ดทั้งหมดเปิดให้ดูได้บน GitHub</div></div></div>
+      <div class="step"><div><h3>เช็ก Smart App Control</h3><p>ถ้าตัวติดตั้งแจ้งว่า Smart App Control เปิดอยู่ ต้องปิดก่อนจึงจะใช้งานได้ ที่ <b>Windows Security → App &amp; browser control → Smart App Control → Off</b></p>
+        <div class="note">ระบบนี้บล็อกไฟล์ของ GStreamer ที่ UxPlay ใช้ และเมื่อปิดแล้วจะเปิดกลับไม่ได้หากไม่ติดตั้ง Windows ใหม่ ตัดสินใจก่อนปิดนะครับ</div></div></div>
+      <div class="step"><div><h3>กด “ติดตั้ง” แล้วรอ</h3><p>ตัวติดตั้งจะลง MSYS2 (ที่ <code>C:\msys64</code>), GStreamer, ดาวน์โหลดและ build UxPlay เวอร์ชันล่าสุด แล้วสร้าง shortcut ให้</p></div></div>
+      <div class="step"><div><h3>อนุญาตการเชื่อมต่อ</h3><p>ตั้งเครือข่ายของคอมเป็น <b>Private</b> (Settings → Network &amp; internet) และถ้า Windows ถามเรื่อง Firewall ให้ติ๊ก <b>Private</b> แล้วกด <b>Allow</b></p></div></div>
+      <div class="step"><div><h3>แชร์จอจาก iPhone</h3><p>ต่อ Wi-Fi เดียวกับคอม ปัดลงเปิดศูนย์ควบคุม แตะ <b>การสะท้อนหน้าจอ</b> แล้วเลือก <b>UxPlay@ชื่อคอม</b></p></div></div>
+    </div>
+    <div class="req">
+      <div><b>ระบบปฏิบัติการ</b>Windows 10 / 11 แบบ 64-bit</div>
+      <div><b>พื้นที่ว่าง</b>ประมาณ 2 GB</div>
+      <div><b>อุปกรณ์</b>iPhone / iPad ที่มี AirPlay</div>
+      <div><b>เครือข่าย</b>คอมกับมือถืออยู่วงเดียวกัน</div>
+    </div>
+  </div>
+</section>
+
+<section id="faq" style="background: var(--bg2);">
+  <div class="wrap">
+    <div class="section-title"><h2>คำถามที่พบบ่อย</h2></div>
+    <div class="faq">
+      <details><summary>iPhone มองไม่เห็นคอมในรายการ</summary><p>ตรวจว่ามือถือกับคอมใช้เราเตอร์เดียวกัน ปิด VPN ชั่วคราว และตั้งเครือข่ายของคอมเป็น Private จากนั้นเปิดหน้า “ตรวจสอบและช่วยเหลือ” ในโปรแกรม จะบอกว่าติดตรงไหนพร้อมปุ่มพาไปแก้</p></details>
+      <details><summary>เปิดโปรแกรมแล้วขึ้นว่าตัวรับสัญญาณมีปัญหา</summary><p>ส่วนใหญ่เกิดจาก Smart App Control ของ Windows 11 บล็อกไฟล์ของ GStreamer ดูวิธีแก้ในขั้นตอนที่ 3 ด้านบน หรือในหน้า “ตรวจสอบและช่วยเหลือ” ของโปรแกรม</p></details>
+      <details><summary>แอปดูหนังบางแอปขึ้นจอดำ</summary><p>แอปที่มีลิขสิทธิ์ (เช่น Netflix) ไม่อนุญาตให้สะท้อนหน้าจอ เป็นข้อจำกัดของแอปนั้น ไม่ใช่ปัญหาของโปรแกรม</p></details>
+      <details><summary>ดู YouTube แนวนอนแล้วมีขอบดำซ้ายขวา</summary><p>วิดีโอเป็นสัดส่วน 16:9 แต่จอ iPhone รุ่นใหม่กว้างกว่า จึงมีขอบดำบนมือถืออยู่แล้ว ใช้สองนิ้วถ่างซูมวิดีโอใน YouTube เพื่อให้เต็มจอ</p></details>
+      <details><summary>โปรแกรมปลอดภัยไหม ติดตั้งอะไรลงเครื่องบ้าง</summary><p>ซอร์สโค้ดเปิดให้ดูทั้งหมด ตัวติดตั้งลง MSYS2 ไว้ที่ <code>C:\msys64</code> (เครื่องมือมาตรฐานสำหรับ build โปรแกรมบน Windows) แล้ว build UxPlay จากซอร์สบน GitHub โดยตรง ตัวโปรแกรมอยู่ในโฟลเดอร์ผู้ใช้ ไม่ต้องใช้สิทธิ์ผู้ดูแลระบบ ยกเว้นตอนขออนุญาต Firewall</p></details>
+      <details><summary>ใช้ควบคุม iPhone จากคอมได้ไหม</summary><p>ไม่ได้ครับ AirPlay ส่งภาพและเสียงได้ทางเดียว Apple ไม่เปิดให้ควบคุมมือถือจากคอม</p></details>
+      <details><summary>ถอนการติดตั้งยังไง</summary><p>ไปที่ Settings → Apps แล้วเลือก UxPlay Mirror → Uninstall ภาพและวิดีโอที่บันทึกไว้จะไม่ถูกลบ ส่วน MSYS2 ถอนแยกได้จากรายการ Apps เช่นกัน</p></details>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="final">
+      <h2>พร้อมลองแล้วหรือยัง</h2>
+      <p>ฟรีทั้งหมด ไม่ต้องสมัคร ไม่มีโฆษณา</p>
+      <a class="btn btn-primary dl" href="#install">ดาวน์โหลด UxPlay Mirror</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div>UxPlay Mirror ทำงานบน <a href="https://github.com/FDH2/UxPlay">UxPlay</a> (GPLv3) ขอบคุณทีมผู้พัฒนา UxPlay รวมถึง <a href="https://gstreamer.freedesktop.org/">GStreamer</a> และ <a href="https://www.msys2.org/">MSYS2</a></div>
+    <div>เผยแพร่ภายใต้สัญญาอนุญาต GNU GPL v3 · โปรเจกต์นี้ไม่มีส่วนเกี่ยวข้องกับ Apple Inc. · AirPlay, iPhone และ iPad เป็นเครื่องหมายการค้าของ Apple Inc.</div>
+  </div>
+</footer>
+
+<script>
+  // Set this to "username/repository" if the site runs on your own domain instead of github.io.
+  const REPO = "";
+
+  (function () {
+    let repo = REPO;
+    const host = location.hostname;
+    if (!repo && host.endsWith(".github.io")) {
+      const owner = host.split(".")[0];
+      const first = location.pathname.split("/").filter(Boolean)[0];
+      repo = owner + "/" + (first || host);
+    }
+    if (repo) {
+      const dl = "https://github.com/" + repo + "/releases/latest/download/UxPlayMirrorSetup.exe";
+      document.querySelectorAll("a.dl").forEach(a => a.href = dl);
+      document.getElementById("repoLink").href = "https://github.com/" + repo;
+    } else {
+      document.getElementById("repoLink").style.display = "none";
+    }
+  })();
+
+  const shots = [
+    ["home-ready.png", "หน้าหลัก", "หน้าหลัก: กดปุ่มเดียวเปิดรับการเชื่อมต่อ พร้อมวิธีเชื่อมต่อ 3 ขั้นตอน"],
+    ["mirror.png", "ขณะแชร์จอ", "หน้าต่างภาพพอดีกับจอมือถือ แถบเครื่องมือด้านข้างพร้อมตัวเลข FPS"],
+    ["pen.png", "ปากกาวาด", "วาดวงกลม ขีดเส้นใต้ ทับภาพ แล้วถ่ายภาพหน้าจอเก็บไว้พร้อมเส้นที่วาด"],
+    ["nowplaying.png", "หน้าจอเพลง", "เปิดเพลงผ่าน AirPlay แล้วขึ้นปกอัลบั้ม ชื่อเพลง และเวลาของเพลง"],
+    ["settings.png", "ตั้งค่า", "ปรับชื่อ รหัส PIN ความละเอียด เฟรมเรต ธีม และอื่น ๆ"],
+    ["help.png", "ตรวจสอบปัญหา", "เช็กความพร้อมของเครื่องให้อัตโนมัติ พร้อมคำแนะนำแก้ปัญหา"],
+    ["setup.png", "ตัวติดตั้ง", "ติดตั้งทุกอย่างให้ในครั้งเดียว"]
+  ];
+  const tabs = document.getElementById("tabs"), img = document.getElementById("shot"), cap = document.getElementById("caption");
+  function show(i) {
+    img.src = "assets/" + shots[i][0]; img.alt = shots[i][2]; cap.textContent = shots[i][2];
+    [...tabs.children].forEach((b, j) => b.setAttribute("aria-selected", i === j));
+  }
+  shots.forEach((s, i) => {
+    const b = document.createElement("button");
+    b.className = "tab"; b.type = "button"; b.setAttribute("role", "tab"); b.textContent = s[1];
+    b.onclick = () => show(i); tabs.appendChild(b);
+  });
+  show(0);
+</script>
+</body>
+</html>
