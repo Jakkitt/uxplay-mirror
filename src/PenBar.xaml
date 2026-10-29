@@ -1,0 +1,28 @@
+<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="UxPlay Mirror Pen" WindowStyle="None" AllowsTransparency="True" Background="Transparent"
+        ShowInTaskbar="False" ResizeMode="NoResize" SizeToContent="WidthAndHeight" ShowActivated="False"
+        FontFamily="{StaticResource UiFont}" Foreground="{DynamicResource Text}" UseLayoutRounding="True">
+  <Border Margin="12" CornerRadius="14" Background="{DynamicResource Surface}" BorderBrush="{DynamicResource Stroke}"
+          BorderThickness="1" Padding="6,4">
+    <Border.Effect>
+      <DropShadowEffect BlurRadius="16" ShadowDepth="2" Opacity="0.28"/>
+    </Border.Effect>
+    <StackPanel Orientation="Horizontal">
+      <RadioButton x:Name="ToolPen" Style="{StaticResource PenTool}" Tag="&#xE70F;" ToolTip="ปากกา" IsChecked="True"/>
+      <RadioButton x:Name="ToolMarker" Style="{StaticResource PenTool}" Tag="&#xE7E6;" ToolTip="ปากกาไฮไลต์"/>
+      <RadioButton x:Name="ToolEraser" Style="{StaticResource PenTool}" Tag="&#xE75C;" ToolTip="ยางลบ (ลบทีละเส้น)"/>
+      <Border Width="1" Margin="6,8" Background="{DynamicResource Stroke}"/>
+      <StackPanel x:Name="ColorPanel" Orientation="Horizontal"/>
+      <Border Width="1" Margin="6,8" Background="{DynamicResource Stroke}"/>
+      <Button x:Name="PenUndo" Style="{StaticResource ToolBtn}" Width="40" Height="40" Content="&#xE7A7;" ToolTip="ย้อนกลับ (Ctrl+Z)"/>
+      <Button x:Name="PenClear" Style="{StaticResource ToolBtn}" Width="40" Height="40" Content="&#xE74D;" ToolTip="ลบทั้งหมด"/>
+      <Button x:Name="PenDone" Style="{StaticResource PrimaryBtn}" Margin="6,4,2,4" Padding="14,6" ToolTip="เลิกวาด (Esc)">
+        <StackPanel Orientation="Horizontal">
+          <TextBlock Text="&#xE73E;" Style="{StaticResource Glyph}" FontSize="12"/>
+          <TextBlock Text="เสร็จ" Margin="7,0,0,0"/>
+        </StackPanel>
+      </Button>
+    </StackPanel>
+  </Border>
+</Window>
