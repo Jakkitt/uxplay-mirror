@@ -1,0 +1,98 @@
+<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="ติดตั้ง UxPlay Mirror" Width="760" Height="560" ResizeMode="CanMinimize"
+        WindowStartupLocation="CenterScreen" Background="{DynamicResource Bg}"
+        FontFamily="{StaticResource UiFont}" Foreground="{DynamicResource Text}" FontSize="13"
+        UseLayoutRounding="True" TextOptions.TextFormattingMode="Ideal">
+  <WindowChrome.WindowChrome>
+    <WindowChrome CaptionHeight="40" ResizeBorderThickness="0" GlassFrameThickness="0,0,0,1" CornerRadius="0" UseAeroCaptionButtons="False"/>
+  </WindowChrome.WindowChrome>
+
+  <Grid>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="250"/>
+      <ColumnDefinition Width="*"/>
+    </Grid.ColumnDefinitions>
+
+    <!-- left brand panel -->
+    <Border>
+      <Border.Background>
+        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+          <GradientStop Color="#3B82F6" Offset="0"/>
+          <GradientStop Color="#7C4DFF" Offset="1"/>
+        </LinearGradientBrush>
+      </Border.Background>
+      <Grid Margin="28,36,24,28">
+        <StackPanel>
+          <Border Width="76" Height="76" CornerRadius="20" Background="#26FFFFFF" HorizontalAlignment="Left">
+            <Image x:Name="Logo" Width="60" Height="60" RenderOptions.BitmapScalingMode="HighQuality"/>
+          </Border>
+          <TextBlock Text="UxPlay Mirror" FontSize="22" FontWeight="SemiBold" Foreground="White" Margin="0,18,0,0"/>
+          <TextBlock Text="แชร์จอ iPhone ขึ้นคอมผ่าน AirPlay" FontSize="13" Foreground="#E6FFFFFF" Margin="0,4,0,0" TextWrapping="Wrap"/>
+        </StackPanel>
+        <TextBlock x:Name="VersionText" VerticalAlignment="Bottom" FontSize="11.5" Foreground="#B3FFFFFF" TextWrapping="Wrap"/>
+      </Grid>
+    </Border>
+
+    <Grid Grid.Column="1">
+      <Grid.RowDefinitions>
+        <RowDefinition Height="40"/>
+        <RowDefinition Height="*"/>
+        <RowDefinition Height="Auto"/>
+      </Grid.RowDefinitions>
+      <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+        <Button x:Name="BtnMin" Style="{StaticResource CaptionBtn}" Content="&#xE921;" WindowChrome.IsHitTestVisibleInChrome="True"/>
+        <Button x:Name="BtnClose" Style="{StaticResource CloseBtn}" Content="&#xE8BB;" WindowChrome.IsHitTestVisibleInChrome="True"/>
+      </StackPanel>
+
+      <!-- welcome -->
+      <StackPanel x:Name="PageWelcome" Grid.Row="1" Margin="34,6,34,0">
+        <TextBlock x:Name="WelcomeTitle" Text="ยินดีต้อนรับ" Style="{StaticResource H1}"/>
+        <TextBlock x:Name="WelcomeText" Style="{StaticResource Muted}" Margin="0,8,0,0" FontSize="13.5"
+                   Text="ตัวติดตั้งจะเตรียมทุกอย่างที่ต้องใช้ให้ครบในครั้งเดียว ใช้เวลาประมาณ 10–20 นาที และต้องต่ออินเทอร์เน็ต (ดาวน์โหลดราว 1 GB)"/>
+        <StackPanel x:Name="WelcomeList" Margin="0,20,0,0"/>
+        <CheckBox x:Name="ChkFirewall" Margin="0,18,0,0" IsChecked="True" Cursor="Hand" Foreground="{DynamicResource Text}">
+          <TextBlock TextWrapping="Wrap" Text="อนุญาต UxPlay ใน Windows Firewall ให้ด้วย (Windows จะถามยืนยันสิทธิ์ผู้ดูแลระบบ)"/>
+        </CheckBox>
+      </StackPanel>
+
+      <!-- progress -->
+      <Grid x:Name="PageProgress" Grid.Row="1" Margin="34,6,34,0" Visibility="Collapsed">
+        <Grid.RowDefinitions>
+          <RowDefinition Height="Auto"/>
+          <RowDefinition Height="Auto"/>
+          <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <StackPanel>
+          <TextBlock x:Name="ProgressTitle" Text="กำลังติดตั้ง…" Style="{StaticResource H1}"/>
+          <TextBlock x:Name="ProgressText" Style="{StaticResource Muted}" Margin="0,6,0,0"/>
+          <ProgressBar x:Name="Bar" Height="6" Margin="0,14,0,0" Foreground="{DynamicResource Accent}"
+                       Background="{DynamicResource SurfaceAlt}" BorderThickness="0" Maximum="100"/>
+        </StackPanel>
+        <StackPanel x:Name="StepsPanel" Grid.Row="1" Margin="0,16,0,0"/>
+        <TextBox x:Name="LogBox" Grid.Row="2" Style="{StaticResource LogBox}" Margin="0,10,0,10" FontSize="10.5"/>
+      </Grid>
+
+      <!-- done -->
+      <StackPanel x:Name="PageDone" Grid.Row="1" Margin="34,6,34,0" Visibility="Collapsed">
+        <Border x:Name="DoneBadge" Width="56" Height="56" CornerRadius="28" HorizontalAlignment="Left" Background="{DynamicResource SuccessSoft}">
+          <TextBlock x:Name="DoneGlyph" Text="&#xE73E;" Style="{StaticResource Glyph}" FontSize="24" Foreground="{DynamicResource Success}"/>
+        </Border>
+        <TextBlock x:Name="DoneTitle" Style="{StaticResource H1}" Margin="0,16,0,0"/>
+        <TextBlock x:Name="DoneText" Style="{StaticResource Muted}" Margin="0,8,0,0" FontSize="13.5"/>
+        <StackPanel x:Name="DoneChecks" Margin="0,18,0,0"/>
+        <CheckBox x:Name="ChkLaunch" Margin="0,16,0,0" IsChecked="True" Cursor="Hand" Foreground="{DynamicResource Text}" Content="เปิด UxPlay Mirror เมื่อกดเสร็จสิ้น"/>
+      </StackPanel>
+
+      <Border Grid.Row="2" Background="{DynamicResource Surface}" BorderBrush="{DynamicResource Stroke}" BorderThickness="0,1,0,0" Padding="34,14">
+        <DockPanel>
+          <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+            <Button x:Name="BtnSecondary" Style="{StaticResource Btn}" Content="ยกเลิก" Margin="0,0,8,0"/>
+            <Button x:Name="BtnPrimary" Style="{StaticResource PrimaryBtn}" Content="ติดตั้ง" Padding="22,8"/>
+          </StackPanel>
+          <TextBlock x:Name="FooterText" Style="{StaticResource Muted}" VerticalAlignment="Center" FontSize="12"/>
+        </DockPanel>
+      </Border>
+    </Grid>
+  </Grid>
+</Window>
