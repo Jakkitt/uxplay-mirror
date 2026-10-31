@@ -52,7 +52,9 @@
   .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
   /* ---------- control room chrome ---------- */
-  .topbar { position: fixed; inset: 0 0 auto; z-index: 20; height: var(--top); background: var(--ground); display: flex; align-items: center; gap: 18px; padding: 0 var(--gutter); }
+  /* bars line up with the scenes' 1480px stage on wide screens */
+  .topbar, .switcher { padding-inline: max(var(--gutter), calc((100% - 1480px) / 2)); }
+  .topbar { position: fixed; inset: 0 0 auto; z-index: 20; height: var(--top); background: var(--ground); display: flex; align-items: center; gap: 18px; padding-block: 0; }
   .brand { display: flex; align-items: center; gap: 10px; font-family: var(--display); font-weight: 700; font-size: 18px; text-decoration: none; white-space: nowrap; }
   .brand img { width: 30px; height: 30px; }
   .onair { display: flex; align-items: center; gap: 12px; margin-left: 12px; min-width: 0; }
@@ -80,7 +82,7 @@
     .brand span { font-size: 16px; }
   }
 
-  .switcher { position: fixed; inset: auto 0 0; z-index: 20; height: var(--strip); background: var(--ground); padding: 0 var(--gutter) env(safe-area-inset-bottom); display: flex; align-items: center; gap: 14px; }
+  .switcher { position: fixed; inset: auto 0 0; z-index: 20; height: var(--strip); background: var(--ground); padding-block: 0 env(safe-area-inset-bottom); display: flex; align-items: center; gap: 14px; }
   .switcher .end { flex: none; color: var(--ink-2); display: flex; align-items: center; gap: 6px; font-size: var(--fs-small); }
   .switcher ol { list-style: none; margin: 0; padding: 0; flex: 1; display: grid; grid-template-columns: repeat(6, 1fr); gap: 4px; position: relative; }
   .switcher ol::before, .switcher ol::after { content: ""; position: absolute; left: 0; top: -9px; height: 4px; border-radius: 2px; }
