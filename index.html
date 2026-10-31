@@ -6,9 +6,13 @@
 <title>UxPlay Mirror – แชร์จอ iPhone ขึ้นคอม Windows ผ่าน AirPlay</title>
 <meta name="description" content="โปรแกรมฟรีแชร์จอ iPhone / iPad ขึ้นคอม Windows ผ่าน AirPlay ภาพลื่น 60 FPS พร้อมเสียง ถ่ายภาพ อัดวิดีโอ ปากกาวาดบนจอ และหน้าจอเพลง ทุกเมนูเป็นภาษาไทย">
 <meta name="theme-color" content="#1d2023">
+<link rel="canonical" href="https://jakkitt.github.io/uxplay-mirror/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://jakkitt.github.io/uxplay-mirror/">
 <meta property="og:title" content="UxPlay Mirror – แชร์จอ iPhone ขึ้นคอม Windows">
 <meta property="og:description" content="ฟรี โอเพนซอร์ส ภาพลื่น 60 FPS ถ่ายภาพ อัดวิดีโอ ปากกาวาดบนจอ ทุกเมนูเป็นภาษาไทย">
-<meta property="og:image" content="assets/mirror.png">
+<meta property="og:image" content="https://jakkitt.github.io/uxplay-mirror/assets/mirror.png">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="icon" type="image/png" href="assets/icon-64.png">
 <link rel="apple-touch-icon" href="assets/icon-256.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -21,8 +25,8 @@
     --panel-2: #33383d;
     --ink: #f1efe8;
     --ink-2: #b9bdb6;
+    --ink-on-light: #2f3337;
     --tally: #c8291f;
-    --tally-lit: #ff4a3d;
     --cue: #3ccf7a;
     --display: "Chakra Petch", "Anuphan", system-ui, sans-serif;
     --text: "Anuphan", system-ui, sans-serif;
@@ -48,8 +52,10 @@
   p { margin: 0; }
   code { font-family: Consolas, "Cascadia Mono", monospace; font-size: .92em; background: var(--panel-2); padding: 1px 6px; border-radius: 2px; }
   :focus-visible { outline: 3px solid var(--cue); outline-offset: 2px; }
+  [hidden] { display: none !important; }
   .nb { white-space: nowrap; }
-  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  /* phones get "send the link to your PC" instead of a Windows .exe */
+  .phone .pc-only, html:not(.phone) .phone-only { display: none !important; }
 
   /* ---------- control room chrome ---------- */
   /* bars line up with the scenes' 1480px stage on wide screens */
@@ -57,8 +63,8 @@
   .topbar { position: fixed; inset: 0 0 auto; z-index: 20; height: var(--top); background: var(--ground); display: flex; align-items: center; gap: 18px; padding-block: 0; }
   .brand { display: flex; align-items: center; gap: 10px; font-family: var(--display); font-weight: 700; font-size: 18px; text-decoration: none; white-space: nowrap; }
   .brand img { width: 30px; height: 30px; }
-  .onair { display: flex; align-items: center; gap: 12px; margin-left: 12px; min-width: 0; }
-  .lamp { font-family: var(--display); font-weight: 700; font-size: 13px; letter-spacing: .02em; padding: 4px 10px; background: var(--tally); color: var(--ink); border-radius: 2px; white-space: nowrap; }
+  .onair { display: flex; align-items: center; gap: 10px; margin-left: 12px; min-width: 0; }
+  .lamp { flex: none; width: 10px; height: 10px; border-radius: 2px; background: var(--tally); }
   .lamp.blink { animation: blink .32s steps(1) 2; }
   @keyframes blink { 50% { background: var(--panel-2); } }
   .scene-name { font-family: var(--display); font-weight: 600; font-size: 15px; color: var(--ink-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -72,11 +78,10 @@
   .btn-take:hover { background: #a9221a; }
   .btn-plain { background: var(--panel-2); color: var(--ink); }
   .btn-plain:hover { background: #3d434a; }
-  .btn-small { min-height: 40px; padding: 0 16px; font-size: 15px; }
+  .btn-small { min-height: 44px; padding: 0 16px; font-size: 15px; }
   @media (max-width: 760px) {
-    .scene-name { display: none; }
-    .onair { margin-left: auto; }
-    .topbar .right { margin-left: 0; gap: 4px; }
+    .onair { display: none; }
+    .topbar .right { gap: 4px; }
     .topbar .btn-small span { display: none; }
     .topbar .btn-small { width: 44px; padding: 0; }
     .brand span { font-size: 16px; }
@@ -90,7 +95,7 @@
   .switcher ol::after { width: var(--signal, 0%); background: var(--tally); transition: width .5s var(--ease); }
   .switcher a { display: grid; place-items: center; height: 44px; padding: 0 6px; border-radius: 2px; background: var(--panel); color: var(--ink-2); text-decoration: none; font-family: var(--display); font-weight: 600; font-size: 15px; white-space: nowrap; transition: background-color .2s, color .2s; position: relative; }
   .switcher a:hover { color: var(--ink); background: var(--panel-2); }
-  .switcher a[aria-current="true"] { background: var(--tally); color: var(--ink); }
+  .switcher a[aria-current="true"] { background: var(--ink); color: var(--ground); }
   .switcher a.next::after { content: ""; position: absolute; left: 8px; right: 8px; bottom: 4px; height: 3px; border-radius: 2px; background: var(--cue); }
   .switcher .short { display: none; }
   @media (max-width: 760px) {
@@ -102,22 +107,24 @@
     .switcher .short { display: inline; }
   }
 
+  .toast { position: fixed; z-index: 30; left: 50%; bottom: calc(var(--strip) + 12px); transform: translateX(-50%); width: max-content; max-width: calc(100vw - 32px); background: var(--ink); color: var(--ground); font-family: var(--display); font-weight: 600; font-size: 15px; padding: 10px 16px; border-radius: 2px; box-shadow: 0 8px 24px rgba(0, 0, 0, .4); }
+
   /* ---------- scenes ---------- */
   .scene { height: 100vh; height: 100svh; scroll-snap-align: start; scroll-snap-stop: always; padding: calc(var(--top) + clamp(8px, 2svh, 24px)) var(--gutter) calc(var(--strip) + clamp(16px, 3svh, 32px)); overflow: hidden; position: relative; }
   .scene:nth-of-type(even) { background: #202427; }
   .scene > .stage { height: 100%; max-width: 1480px; margin: 0 auto; }
   .lede { color: var(--ink-2); max-width: 46ch; margin-top: clamp(8px, 1.4svh, 14px); }
 
-  .monitor { position: relative; background: #0f1113; border: 6px solid var(--panel-2); border-radius: 3px; overflow: hidden; }
+  .monitor { position: relative; background: #0f1113; border: 6px solid var(--panel-2); border-radius: 3px; overflow: hidden; margin: 0; }
   .monitor--program { border-color: var(--tally); }
   .monitor--preview { border-color: var(--cue); border-width: 4px; }
-  .tag { position: absolute; z-index: 2; top: 0; left: 0; font-family: var(--display); font-weight: 700; font-size: 13px; padding: 3px 10px; color: var(--ground); background: var(--cue); }
+  .tag { position: absolute; z-index: 2; top: 0; left: 0; font-family: var(--display); font-weight: 700; font-size: 13px; padding: 4px 10px; color: var(--ground); background: var(--cue); }
   .monitor--program .tag { background: var(--tally); color: var(--ink); }
 
   /* hero */
   .hero { display: grid; grid-template-columns: minmax(0, 1fr) clamp(240px, 22vw, 330px); gap: clamp(16px, 2vw, 28px); align-items: start; }
   .program { position: relative; }
-  .hero .monitor--program { aspect-ratio: 16 / 9; max-height: calc(100svh - var(--top) - var(--strip) - clamp(160px, 28svh, 280px)); width: 100%; }
+  .hero .monitor--program { aspect-ratio: 16 / 9; max-height: calc(100svh - var(--top) - var(--strip) - clamp(170px, 30svh, 300px)); width: 100%; }
   .hero .app-shot { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: left top; }
   .hero .phone-shot { position: absolute; right: 4%; top: 7%; height: 118%; width: auto; border-radius: 4px; box-shadow: 0 18px 40px rgba(0, 0, 0, .5); }
   .lower-third { position: relative; z-index: 3; margin: calc(-1 * clamp(56px, 11svh, 110px)) 0 0 clamp(14px, 2.4vw, 36px); width: min(820px, 88%); }
@@ -127,15 +134,15 @@
   .cta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: clamp(10px, 1.8svh, 16px); }
   .side { display: grid; gap: clamp(12px, 1.8svh, 18px); }
   .monitor--preview { display: block; aspect-ratio: 16 / 10; text-decoration: none; }
-  .monitor--preview img { width: 100%; height: 100%; object-fit: cover; object-position: center 30%; opacity: .9; transition: opacity .2s; }
+  .monitor--preview img { width: 100%; height: 100%; object-fit: cover; object-position: center 38%; opacity: .9; transition: opacity .2s; }
   .monitor--preview:hover img { opacity: 1; }
   .monitor--preview .caption { position: absolute; left: 0; right: 0; bottom: 0; background: var(--ground); padding: 6px 10px; font-family: var(--display); font-weight: 600; font-size: var(--fs-small); }
   .meter { background: var(--panel); padding: clamp(12px, 1.8svh, 16px); display: grid; grid-template-columns: auto 1fr; gap: 6px 14px; align-items: center; }
   .segs { display: flex; gap: 6px; height: clamp(44px, 7svh, 64px); }
   .segs svg { height: 100%; width: auto; }
-  .segs polygon { fill: #3a2523; transition: fill .08s; }
-  .segs polygon.on { fill: var(--tally-lit); }
-  .meter .unit { font-family: var(--display); font-weight: 700; font-size: 22px; color: var(--tally-lit); }
+  .segs polygon { fill: #20372a; }
+  .segs polygon.on { fill: var(--cue); }
+  .meter .unit { font-family: var(--display); font-weight: 700; font-size: 22px; color: var(--cue); }
   .meter p { grid-column: 1 / -1; font-size: var(--fs-small); color: var(--ink-2); }
   .facts { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 2px; }
   .facts div { background: var(--panel); padding: 8px 12px; }
@@ -146,7 +153,7 @@
     .side { display: none; }
   }
   @media (max-width: 760px) {
-    .hero .monitor--program { aspect-ratio: 4 / 3.4; max-height: 40svh; border-width: 4px; }
+    .hero .monitor--program { aspect-ratio: 4 / 3.4; max-height: 38svh; border-width: 4px; }
     .hero .phone-shot { height: 112%; right: 3%; top: 6%; }
     .lower-third { margin: -22px 0 0; width: 100%; }
     .cta .btn { flex: 1; padding: 0 14px; font-size: 16px; }
@@ -158,16 +165,18 @@
   .bus { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; margin-top: clamp(14px, 3svh, 32px); }
   .bus button { display: flex; flex-direction: column; align-items: flex-start; justify-content: space-between; gap: 8px; min-height: clamp(56px, 10svh, 92px); padding: 10px 12px; border: 0; border-radius: 2px; background: var(--panel); color: var(--ink-2); text-align: left; font-family: var(--display); font-weight: 600; font-size: var(--fs-small); line-height: 1.25; cursor: pointer; transition: background-color .15s, color .15s; }
   .bus button:hover { background: var(--panel-2); color: var(--ink); }
-  .bus button[aria-selected="true"] { background: var(--tally); color: var(--ink); }
+  .bus button[aria-selected="true"] { background: var(--ink); color: var(--ground); }
   .bus svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+  .bus .short { display: none; }
   .feature-out { display: grid; grid-template-rows: minmax(0, 1fr) auto; height: 100%; max-height: 720px; min-height: 0; }
-  .feature-out .monitor { min-height: 0; display: grid; place-items: center; }
+  .feature-out .monitor { min-height: 0; }
   .feature-out .monitor img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
-  .feature-out .monitor .zoom { object-fit: cover; }
+  .feature-out .monitor img.zoom { object-fit: cover; }
   .feature-out .caption-bar { background: var(--panel); padding: clamp(12px, 2svh, 20px) clamp(14px, 2vw, 24px); min-height: clamp(96px, 16svh, 140px); }
   .feature-out h3 { font-size: clamp(20px, min(2vw, 3.4svh), 30px); }
   .feature-out .caption-bar p { color: var(--ink-2); margin-top: 6px; max-width: 70ch; }
-  .keys { display: grid; gap: clamp(8px, 1.6svh, 16px); padding: 16px; }
+  .keys { position: absolute; inset: 0; display: grid; align-content: center; gap: clamp(8px, 1.6svh, 16px); padding: 16px 16px 16px 24px; }
+  .keys[hidden] { display: none; }
   .keys div { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: var(--fs-small); color: var(--ink-2); }
   .keys kbd { font-family: var(--display); font-weight: 700; font-size: clamp(15px, 1.4vw, 22px); color: var(--ink); background: var(--panel-2); border-radius: 3px; padding: 6px 12px; min-width: 46px; text-align: center; box-shadow: 0 3px 0 #15181a; }
   .keys b { color: var(--ink); font-weight: 600; margin-left: 6px; }
@@ -180,14 +189,19 @@
     .features-head { display: contents; }
     .features-head h2 { order: 0; }
     .feature-out { order: 1; }
-    .bus button { min-height: 44px; flex-direction: row; align-items: center; justify-content: flex-start; padding: 6px 8px; font-size: 13px; }
+    .bus button { min-height: 44px; flex-direction: row; align-items: center; justify-content: flex-start; padding: 6px 8px; font-size: 14px; }
+    .bus .long { display: none; }
+    .bus .short { display: inline; }
     .bus svg { width: 18px; height: 18px; }
-    .feature-out .caption-bar { min-height: 0; }
+    .feature-out .caption-bar { min-height: 118px; }
   }
 
   /* install: rundown + cue detail */
   .install { display: grid; grid-template-columns: minmax(300px, 0.9fr) minmax(0, 1.2fr); gap: clamp(20px, 3vw, 48px); height: 100%; align-items: center; }
-  .rundown { list-style: none; margin: clamp(14px, 3svh, 30px) 0 0; padding: 0; display: grid; gap: 4px; counter-reset: cue; }
+  .handoff { display: flex; gap: 10px; align-items: flex-start; margin-top: clamp(8px, 1.4svh, 14px); background: var(--ink); color: var(--ground); padding: 10px 14px; border-radius: 2px; font-size: var(--fs-small); font-weight: 500; max-width: 46ch; }
+  .handoff[hidden] { display: none; }
+  .handoff svg { flex: none; margin-top: 2px; }
+  .rundown { list-style: none; margin: clamp(14px, 3svh, 30px) 0 0; padding: 0; display: grid; gap: 4px; }
   .rundown button { width: 100%; display: grid; grid-template-columns: 34px 1fr auto; align-items: center; gap: 12px; min-height: clamp(44px, 7svh, 60px); padding: 6px 14px; border: 0; border-radius: 2px; background: var(--panel); color: var(--ink-2); text-align: left; cursor: pointer; font-family: var(--display); font-weight: 600; font-size: var(--fs-body); transition: background-color .15s, color .15s; }
   .rundown button:hover { background: var(--panel-2); color: var(--ink); }
   .rundown button[aria-selected="true"] { background: var(--ink); color: var(--ground); }
@@ -198,10 +212,13 @@
   .cue-text h3 { font-size: clamp(22px, min(2.2vw, 3.6svh), 32px); }
   .cue-text p { color: var(--ink-2); max-width: 62ch; }
   .cue-text b { color: var(--ink); font-weight: 600; }
+  .cue-text a { color: var(--ink); }
   .warn { display: flex; gap: 10px; align-items: flex-start; background: var(--ground); padding: 10px 14px; font-size: var(--fs-small); color: var(--ink); max-width: 62ch; }
-  .warn strong { flex: none; font-family: var(--display); font-weight: 700; color: var(--ink); background: var(--tally); padding: 0 8px; border-radius: 2px; }
-  .cue-visual { min-height: 0; display: grid; place-items: center; padding: 0 clamp(16px, 2.4vw, 32px) clamp(16px, 2.6svh, 28px); }
-  .cue-visual img { max-width: 100%; max-height: 100%; width: auto; object-fit: contain; border-radius: 3px; }
+  .warn strong { flex: none; font-family: var(--display); font-weight: 700; color: var(--ground); background: var(--ink); padding: 0 8px; border-radius: 2px; }
+  .cue-text .warn { color: var(--ink); }
+  .cue-visual { --pad-x: clamp(16px, 2.4vw, 32px); --pad-b: clamp(16px, 2.6svh, 28px); position: relative; min-height: 0; display: grid; place-items: center; padding: 0 var(--pad-x) var(--pad-b); }
+  /* screenshots are pinned inside the panel so a tall image can never push past it */
+  .cue-visual > img { position: absolute; left: var(--pad-x); top: 0; width: calc(100% - 2 * var(--pad-x)); height: calc(100% - var(--pad-b)); max-width: none; object-fit: contain; }
   .path { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-family: var(--display); font-weight: 600; font-size: var(--fs-small); }
   .path span { background: var(--panel-2); padding: 6px 10px; border-radius: 2px; }
   .path i { font-style: normal; color: var(--ink-2); }
@@ -216,14 +233,14 @@
   .bigfile code { font-size: clamp(14px, 1.3vw, 18px); }
   @media (max-width: 900px) {
     .install { grid-template-columns: 1fr; grid-template-rows: auto minmax(0, 1fr); gap: 12px; align-items: stretch; }
-    .install .lede { font-size: 14px; }
+    .install .lede, .handoff { font-size: 14px; }
     .rundown { margin-top: 10px; grid-template-columns: repeat(6, 1fr); }
     .rundown button { grid-template-columns: 1fr; justify-items: center; min-height: 44px; padding: 4px; }
     .rundown .l, .rundown .t { display: none; }
     .cue { max-height: none; overflow: hidden; }
     .cue-text { padding: 14px 16px; gap: 8px; }
     .cue-text p { font-size: 14.5px; }
-    .cue-visual { padding: 0 16px 16px; }
+    .cue-visual { --pad-x: 16px; --pad-b: 16px; }
     .smartscreen { padding: 12px 16px; }
   }
 
@@ -237,8 +254,9 @@
   .qa details[open] { background: var(--ink); color: var(--ground); }
   .qa details[open] summary::after { border-color: var(--ground); transform: rotate(-135deg) translate(-2px, -2px); }
   .qa details p { padding: 0 16px 14px; max-width: 70ch; }
-  .qa details[open] p { color: #2f3337; }
+  .qa details[open] p { color: var(--ink-on-light); }
   .qa details[open] code { background: #dcd9d0; }
+  .qa details a { color: var(--ground); font-weight: 600; }
   .qa summary:hover { background: var(--panel-2); }
   .qa details[open] summary:hover { background: transparent; }
   .chain { display: grid; gap: 4px; }
@@ -246,9 +264,9 @@
   .chain .node svg { width: 26px; height: 26px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
   .chain .node b { display: block; font-family: var(--display); font-weight: 600; font-size: var(--fs-small); }
   .chain .node span { font-size: 13px; color: var(--ink-2); }
-  .chain .node.hot { background: var(--tally); }
-  .chain .node.hot span { color: var(--ink); }
-  .chain .wire { width: 4px; height: clamp(8px, 1.6svh, 16px); background: var(--panel-2); margin-left: 31px; border-radius: 2px; }
+  .chain .node.hot { background: var(--ink); color: var(--ground); }
+  .chain .node.hot span { color: var(--ink-on-light); }
+  .chain .wire { width: 4px; height: clamp(8px, 1.6svh, 16px); background: #4a5057; margin-left: 31px; border-radius: 2px; }
   .faq .aside-note { font-size: 13px; color: var(--ink-2); margin-top: 10px; }
   .faq-shot { aspect-ratio: 1080 / 700; width: 100%; }
   .faq-shot img { width: 100%; height: 100%; object-fit: cover; object-position: right top; }
@@ -258,39 +276,56 @@
     .chain { grid-template-columns: repeat(5, 1fr); }
     .chain .wire, .chain .node span, .faq .aside-note { display: none; }
     .chain .node { grid-template-columns: 1fr; justify-items: center; text-align: center; gap: 6px; padding: 10px 4px; }
-    .chain .node b { font-size: 12px; line-height: 1.25; }
+    .chain .node b { font-size: 13px; line-height: 1.25; }
     .faq-shot { aspect-ratio: auto; height: min(30svh, 260px); }
     .qa summary { font-size: 15px; min-height: 48px; }
     .qa details p { font-size: 14.5px; }
   }
 
   /* final */
-  .final { display: grid; grid-template-rows: auto auto auto minmax(0, 1fr); height: 100%; gap: clamp(12px, 2.4svh, 24px); }
+  .final { display: grid; grid-template-rows: auto minmax(0, 1fr) auto; height: 100%; gap: clamp(12px, 2.4svh, 24px); }
   .final-head { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 16px 32px; align-items: end; }
+  .final .lede { max-width: 62ch; }
+  .final-actions { display: grid; gap: 10px; justify-items: end; }
   .final .btn-take { min-height: clamp(56px, 9svh, 76px); font-size: clamp(18px, 1.6vw, 24px); padding: 0 32px; }
-  .final .warn { max-width: none; background: var(--panel); }
-  .reqs { margin: 0; display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; }
-  .reqs div { background: var(--panel); padding: clamp(10px, 1.8svh, 16px) 14px; }
+  .send-note { color: var(--ink-2); font-size: var(--fs-small); max-width: 40ch; }
+  .send-note b { color: var(--ink); font-weight: 600; }
+  .final-body { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); gap: clamp(16px, 2.4vw, 32px); min-height: 0; }
+  .after { display: grid; align-content: start; gap: clamp(10px, 1.8svh, 16px); min-height: 0; }
+  .after h3 { font-size: clamp(18px, min(1.6vw, 2.8svh), 24px); }
+  .checklist { margin: 0; padding: 0; list-style: none; counter-reset: c; display: grid; gap: 4px; }
+  .checklist li { counter-increment: c; display: grid; grid-template-columns: 28px 1fr; gap: 10px; align-items: baseline; background: var(--panel); padding: 8px 14px; border-radius: 2px; font-size: var(--fs-small); color: var(--ink-2); }
+  .checklist li::before { content: counter(c); font-family: var(--display); font-weight: 700; font-size: 18px; color: var(--ink); }
+  .checklist b, .checklist a { color: var(--ink); }
+  .reqs { margin: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; }
+  .reqs div { background: var(--panel); padding: clamp(8px, 1.4svh, 12px) 14px; }
   .reqs dt { font-size: 13px; color: var(--ink-2); }
   .reqs dd { margin: 2px 0 0; font-family: var(--display); font-weight: 600; font-size: var(--fs-small); line-height: 1.35; }
-  .credits { align-self: end; display: grid; gap: 6px; font-size: 13px; color: var(--ink-2); }
+  .final-shot { aspect-ratio: auto; min-height: 0; }
+  .final-shot img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: left top; opacity: 1; }
+  .credits { display: grid; gap: 6px; font-size: 13px; color: var(--ink-2); }
   .credits p:not(.wordmark) { max-width: 110ch; }
   .credits a { color: var(--ink); }
-  .wordmark { font-family: var(--display); font-weight: 700; font-size: max(40px, min(calc((min(100vw, 1480px) - 2 * var(--gutter)) / 6.3), 24svh)); line-height: .82; letter-spacing: -0.03em; color: #3a3f45; white-space: nowrap; overflow: hidden; margin: 0 0 -0.08em; user-select: none; }
-  @media (max-width: 1000px) { .reqs { grid-template-columns: repeat(3, 1fr); } }
+  .wordmark { font-family: var(--display); font-weight: 700; font-size: max(40px, min(calc((min(100vw, 1480px) - 2 * var(--gutter)) / 6.3), 11svh)); line-height: .82; letter-spacing: -0.03em; color: #3a3f45; white-space: nowrap; overflow: hidden; margin: 4px 0 -0.08em; user-select: none; }
+  @media (max-width: 1000px) {
+    .final-body { grid-template-columns: 1fr; }
+    .final-shot { display: none; }
+  }
   @media (max-width: 760px) {
+    .final { grid-template-rows: auto auto auto; align-content: start; }
     .final-head { grid-template-columns: 1fr; }
+    .final-actions { justify-items: stretch; }
     .final .btn-take { width: 100%; }
+    .after h3, .checklist { display: none; }
     .reqs { grid-template-columns: 1fr 1fr; }
     .reqs div:last-child { grid-column: 1 / -1; }
-    .final .warn { display: none; }
-    .credits { font-size: 12px; gap: 4px; }
+    .wordmark { display: none; }
   }
 
   /* short phones (iPhone SE and friends): tighten everything a notch */
   @media (max-width: 760px) and (max-height: 740px) {
     .scene { padding-top: calc(var(--top) + 6px); padding-bottom: calc(var(--strip) + 10px); }
-    .hero .monitor--program { max-height: calc(100svh - var(--top) - var(--strip) - 330px); }
+    .hero .monitor--program { max-height: calc(100svh - var(--top) - var(--strip) - 340px); }
     .lower-third .strap p { font-size: 14px; }
     .bus button { min-height: 40px; }
     .smartscreen .ss-body { display: none; }
@@ -300,7 +335,7 @@
     .qa details p { font-size: 14px; padding-bottom: 10px; }
     .reqs div { padding: 8px 10px; }
     .final { gap: 10px; }
-    .wordmark { font-size: 40px; }
+    .feature-out .caption-bar { min-height: 0; }
   }
 
   @media (max-width: 760px) and (max-height: 640px) {
@@ -309,10 +344,11 @@
     .qa { margin-top: 10px; }
     .qa summary { min-height: 40px; font-size: 14px; padding: 4px 12px; }
     .qa details p { line-height: 1.45; padding: 0 12px 8px; font-size: 13.5px; }
-    .final .lede { font-size: 13.5px; }
+    .final .lede, .send-note { font-size: 13.5px; }
     .final .btn-take { min-height: 50px; }
     .reqs dd { font-size: 13px; }
-    .wordmark { display: none; }
+    .keys { gap: 4px; padding: 8px 12px; }
+    .keys kbd { font-size: 13px; padding: 3px 8px; min-width: 36px; }
   }
 
   /* screens too short to hold a scene: let it grow instead of clipping */
@@ -321,6 +357,9 @@
     .scene { height: auto; min-height: 100svh; overflow: visible; }
     .feature-out, .cue { height: auto; }
     .feature-out .monitor { aspect-ratio: 16 / 9; }
+    .cue-visual { min-height: 260px; }
+    .final-body { grid-template-columns: 1fr; }
+    .final-shot { display: none; }
   }
 
   /* scene cue-in: heading, then text, then picture */
@@ -338,18 +377,22 @@
 
 <header class="topbar">
   <a class="brand" href="#top"><img src="assets/icon-64.png" alt="" width="30" height="30"><span>UxPlay Mirror</span></a>
-  <div class="onair" aria-live="polite">
-    <span class="lamp" id="lamp">ออกอากาศ</span>
+  <div class="onair">
+    <span class="lamp" id="lamp" aria-hidden="true"></span>
     <span class="scene-name" id="sceneName">หน้าแรก</span>
   </div>
   <div class="right">
-    <a class="icon-link" id="repoLink" href="#" aria-label="ซอร์สโค้ดบน GitHub">
+    <a class="icon-link repo" href="https://github.com/Jakkitt/uxplay-mirror" aria-label="ซอร์สโค้ดบน GitHub">
       <svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
     </a>
-    <a class="btn btn-take btn-small dl" href="#download" aria-label="ดาวน์โหลดสำหรับ Windows">
+    <a class="btn btn-take btn-small dl pc-only" href="#download" aria-label="ดาวน์โหลดสำหรับ Windows">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
       <span>ดาวน์โหลด</span>
     </a>
+    <button class="btn btn-take btn-small share phone-only" type="button" aria-label="ส่งลิงก์ไปเปิดที่คอม">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V3"/><path d="m7 8 5-5 5 5"/><path d="M5 13v8h14v-8"/></svg>
+      <span>ส่งลิงก์</span>
+    </button>
   </div>
 </header>
 
@@ -359,19 +402,23 @@
   <div class="stage hero">
     <div class="program">
       <div class="monitor monitor--program" data-cue style="--i:2">
-        <span class="tag">ออกอากาศ</span>
+        <span class="tag">ภาพจริงจากโปรแกรม</span>
         <img class="app-shot" src="assets/home-mirroring.png" alt="หน้าหลักของ UxPlay Mirror ขณะกำลังแชร์จอจาก iPhone" width="1080" height="700">
         <img class="phone-shot" src="assets/phone-window.png" alt="หน้าต่างภาพจาก iPhone บนคอม" width="420" height="940">
       </div>
       <div class="lower-third">
         <h1 data-cue style="--i:0"><span class="nb">แชร์จอ iPhone</span> <span class="nb">ขึ้นคอม Windows</span></h1>
         <div class="strap" data-cue style="--i:1">
-          <p>ใช้ AirPlay ที่มีอยู่แล้วใน iPhone และ iPad ไม่ต้องลงแอปในมือถือ ภาพลื่น 60 FPS พร้อมเสียง ฟรี และทุกเมนูเป็นภาษาไทย</p>
+          <p>ใช้ AirPlay ที่มีอยู่แล้วใน iPhone และ iPad ไม่ต้องลงแอปในมือถือ ภาพลื่น 60 FPS พร้อมเสียง ฟรี ทุกเมนูเป็นภาษาไทย ติดตั้งครั้งเดียวราว 10–20 นาที</p>
           <div class="cta">
-            <a class="btn btn-take dl" href="#download">
+            <a class="btn btn-take dl pc-only" href="#download">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
               ดาวน์โหลดสำหรับ Windows
             </a>
+            <button class="btn btn-take share phone-only" type="button">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V3"/><path d="m7 8 5-5 5 5"/><path d="M5 13v8h14v-8"/></svg>
+              ส่งลิงก์ไปเปิดที่คอม
+            </button>
             <a class="btn btn-plain" href="#install">ดูวิธีติดตั้ง</a>
           </div>
         </div>
@@ -380,19 +427,19 @@
     <aside class="side" aria-label="ข้อมูลโปรแกรม">
       <a class="monitor monitor--preview" href="#features" data-cue style="--i:3">
         <span class="tag">ถัดไป</span>
-        <img src="assets/pen.png" alt="" width="420" height="910">
+        <img src="assets/nowplaying.png" alt="" width="420" height="640">
         <span class="caption">ทำอะไรได้บ้าง</span>
       </a>
       <div class="meter" data-cue style="--i:4">
         <div class="segs" id="fps" role="img" aria-label="60 FPS"></div>
         <span class="unit">FPS</span>
-        <p>ตัวนับเฟรมแบบในโปรแกรม ค่าเริ่มต้น 60 FPS และมีโหมดทดลอง 120 FPS</p>
+        <p>ภาพลื่น 60 FPS เป็นค่าเริ่มต้น และมีโหมดทดลอง 120 FPS</p>
       </div>
       <dl class="facts" data-cue style="--i:5">
         <div><dt>ใช้กับ</dt><dd>Windows 10 / 11 64 บิต</dd></div>
         <div><dt>ราคา</dt><dd>ฟรี ไม่มีโฆษณา</dd></div>
-        <div><dt>ขนาดตัวติดตั้ง</dt><dd>0.4 MB</dd></div>
-        <div><dt>เวอร์ชัน</dt><dd>1.0</dd></div>
+        <div><dt>ติดตั้ง</dt><dd>ราว 10–20 นาที</dd></div>
+        <div><dt>ตัวติดตั้ง</dt><dd>0.4 MB + โหลดเพิ่มราว 1 GB</dd></div>
       </dl>
     </aside>
   </div>
@@ -407,13 +454,14 @@
       <p class="note-small" data-cue style="--i:3">ภาพจริงจากตัวโปรแกรม หน้าจอมือถือในภาพเป็นภาพตัวอย่าง</p>
     </div>
     <div class="feature-out" data-cue style="--i:2">
-      <div class="monitor monitor--program" id="featureMonitor" role="tabpanel" aria-labelledby="">
-        <span class="tag">ออกอากาศ</span>
-        <img id="featureImg" src="assets/mirror.png" alt="" width="680" height="1020">
+      <div class="monitor monitor--program" id="featureMonitor" role="tabpanel">
+        <span class="tag">ภาพจริงจากโปรแกรม</span>
+        <img id="featureImg" src="assets/mirror.png" alt="หน้าต่างภาพจาก iPhone พร้อมแถบเครื่องมือที่แสดง 58 FPS" width="680" height="1020">
+        <div class="keys" id="featureKeys" hidden></div>
       </div>
-      <div class="caption-bar" aria-live="polite">
+      <div class="caption-bar">
         <h3 id="featureTitle">ภาพลื่น 60 FPS</h3>
-        <p id="featureText"></p>
+        <p id="featureText">ถอดรหัสด้วยการ์ดจอ หน่วงต่ำ แถบเครื่องมือข้างหน้าต่างบอก FPS ที่ iPhone ส่งมาจริง มีโหมดทดลอง 120 FPS แต่ iPhone ส่วนใหญ่ส่งภาพผ่าน AirPlay ได้สูงสุด 60</p>
       </div>
     </div>
   </div>
@@ -423,7 +471,11 @@
   <div class="stage install">
     <div>
       <h2 id="h-install" data-cue style="--i:0">วิธีติดตั้ง</h2>
-      <p class="lede" data-cue style="--i:1">ทำครั้งเดียว ใช้เวลาประมาณ 10–20 นาที และต้องต่ออินเทอร์เน็ตระหว่างติดตั้ง ทุกหน้าจอเตือนที่จะเจอมีวิธีผ่านบอกไว้ครบ</p>
+      <p class="lede" id="installLede" data-cue style="--i:1">ทำครั้งเดียว ใช้เวลาประมาณ 10–20 นาที และต้องต่ออินเทอร์เน็ตระหว่างติดตั้ง ทุกหน้าจอเตือนที่จะเจอมีวิธีผ่านบอกไว้ครบ</p>
+      <p class="handoff" id="handoff" role="status" hidden>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
+        <span>กำลังดาวน์โหลด UxPlayMirrorSetup.exe ขั้นต่อไป: เปิดไฟล์ แล้วกด More info และ Run anyway</span>
+      </p>
       <ol class="rundown" role="tablist" aria-label="ขั้นตอนติดตั้ง" id="rundown" data-cue style="--i:2"></ol>
     </div>
     <div class="cue" role="tabpanel" id="cuePanel" data-cue style="--i:3">
@@ -436,7 +488,7 @@
 <section class="scene" id="trouble" data-name="แก้ปัญหา" aria-labelledby="h-trouble">
   <div class="stage faq">
     <div>
-      <h2 id="h-trouble" data-cue style="--i:0">ภาพไม่ขึ้น หรือ Windows เตือน</h2>
+      <h2 id="h-trouble" data-cue style="--i:0">แก้ปัญหาที่เจอบ่อย</h2>
       <div class="qa" data-cue style="--i:1">
         <details name="trouble" data-hot="wifi,private" open>
           <summary>iPhone มองไม่เห็นคอมในรายการ</summary>
@@ -444,7 +496,7 @@
         </details>
         <details name="trouble" data-hot="sac">
           <summary>เปิดโปรแกรมแล้วขึ้นว่าตัวรับสัญญาณมีปัญหา</summary>
-          <p>ส่วนใหญ่เกิดจาก Smart App Control ของ Windows 11 บล็อกไฟล์ของ GStreamer ต้องปิดที่ Windows Security → App &amp; browser control → Smart App Control ดูรายละเอียดในขั้นตอนติดตั้งข้อ 3</p>
+          <p>ส่วนใหญ่เกิดจาก Smart App Control ของ Windows 11 บล็อกไฟล์ของ GStreamer ต้องปิดที่ Windows Security → App &amp; browser control → Smart App Control ดูรายละเอียดใน<a href="#install" data-step="2">ขั้นตอนติดตั้งข้อ 3</a></p>
         </details>
         <details name="trouble" data-hot="mdns">
           <summary>Windows เตือนว่า mdnsNSP.dll ถูกบล็อก</summary>
@@ -454,9 +506,9 @@
           <summary>แอปดูหนังบางแอปขึ้นจอดำ</summary>
           <p>แอปที่มีลิขสิทธิ์ เช่น Netflix ไม่อนุญาตให้สะท้อนหน้าจอ เป็นข้อจำกัดของแอปนั้น ไม่ใช่ปัญหาของโปรแกรม</p>
         </details>
-        <details name="trouble" data-hot="phone">
-          <summary>ดู YouTube แนวนอนแล้วมีขอบดำซ้ายขวา</summary>
-          <p>วิดีโอเป็นสัดส่วน 16:9 แต่จอ iPhone รุ่นใหม่กว้างกว่า จึงมีขอบดำบนมือถืออยู่แล้ว ใช้สองนิ้วถ่างซูมวิดีโอใน YouTube ให้เต็มจอ</p>
+        <details name="trouble" data-hot="sac">
+          <summary>ติดตั้งไม่สำเร็จ หรือยังแก้ไม่ได้</summary>
+          <p>ลองเปิดตัวติดตั้งใหม่อีกครั้งโดยต่ออินเทอร์เน็ตไว้ ถ้ายังไม่ได้ <a class="issues" href="https://github.com/Jakkitt/uxplay-mirror/issues">แจ้งปัญหาบน GitHub</a> พร้อมบอกว่าค้างที่ขั้นไหน และแนบภาพหน้าจอ</p>
         </details>
       </div>
     </div>
@@ -466,11 +518,11 @@
         <div class="wire"></div>
         <div class="node" data-node="wifi"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5a10 10 0 0 1 14 0"/><path d="M8.5 16a5 5 0 0 1 7 0"/><path d="M2 9a15 15 0 0 1 20 0"/><path d="M12 19.5h.01"/></svg><div><b>เราเตอร์เดียวกัน</b><span>ไม่ผ่าน VPN</span></div></div>
         <div class="wire"></div>
-        <div class="node" data-node="private"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/></svg><div><b>เครือข่าย Private และ Firewall</b><span>อนุญาต UxPlay</span></div></div>
+        <div class="node" data-node="private"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/></svg><div><b>Private และ Firewall</b><span>อนุญาต UxPlay</span></div></div>
         <div class="wire"></div>
-        <div class="node" data-node="mdns"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="2"/><path d="M8 8a6 6 0 0 0 0 8M16 8a6 6 0 0 1 0 8M5 5a10 10 0 0 0 0 14M19 5a10 10 0 0 1 0 14"/></svg><div><b>ประกาศชื่อในเครือข่าย</b><span>UxPlay ทำเอง ไม่ต้องใช้ Bonjour</span></div></div>
+        <div class="node" data-node="mdns"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="2"/><path d="M8 8a6 6 0 0 0 0 8M16 8a6 6 0 0 1 0 8M5 5a10 10 0 0 0 0 14M19 5a10 10 0 0 1 0 14"/></svg><div><b>ประกาศชื่อ</b><span>UxPlay ทำเอง ไม่ต้องใช้ Bonjour</span></div></div>
         <div class="wire"></div>
-        <div class="node" data-node="sac"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg><div><b>ตัวรับสัญญาณบนคอม</b><span>Smart App Control ต้องปิด</span></div></div>
+        <div class="node" data-node="sac"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg><div><b>ตัวรับบนคอม</b><span>ติดตั้งครบ และ Smart App Control ปิดอยู่</span></div></div>
       </div>
       <p class="aside-note">หน้า “ตรวจสอบและช่วยเหลือ” ในโปรแกรมเช็กจุดเหล่านี้ให้อัตโนมัติ</p>
     </aside>
@@ -492,7 +544,7 @@
         </details>
         <details name="faq">
           <summary>ใช้ควบคุม iPhone จากคอมได้ไหม</summary>
-          <p>ไม่ได้ครับ AirPlay ส่งภาพและเสียงได้ทางเดียว Apple ไม่เปิดให้ควบคุมมือถือจากคอม</p>
+          <p>ไม่ได้ AirPlay ส่งภาพและเสียงได้ทางเดียว Apple ไม่เปิดให้ควบคุมมือถือจากคอม</p>
         </details>
         <details name="faq">
           <summary>ถอนการติดตั้งยังไง</summary>
@@ -511,24 +563,44 @@
   <div class="stage final">
     <div class="final-head">
       <div>
-        <h2 id="h-download" data-cue style="--i:0">พร้อมขึ้นจอแล้ว</h2>
-        <p class="lede" data-cue style="--i:1">ฟรีทั้งหมด ไม่ต้องสมัคร ไม่มีโฆษณา ไฟล์ <code>UxPlayMirrorSetup.exe</code> ขนาด 0.4 MB เวอร์ชัน 1.0</p>
+        <h2 id="h-download" data-cue style="--i:0">ดาวน์โหลด UxPlay Mirror</h2>
+        <p class="lede" data-cue style="--i:1">ฟรีทั้งหมด ไม่ต้องสมัคร ไม่มีโฆษณา ไฟล์ <code>UxPlayMirrorSetup.exe</code> เวอร์ชัน 1.0 ขนาด 0.4 MB แล้วตัวติดตั้งจะโหลดส่วนประกอบอีกราว 1 GB</p>
       </div>
-      <a class="btn btn-take dl" href="#install" data-cue style="--i:2">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
-        ดาวน์โหลดสำหรับ Windows
-      </a>
+      <div class="final-actions" data-cue style="--i:2">
+        <a class="btn btn-take dl pc-only" href="#install">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
+          ดาวน์โหลดสำหรับ Windows
+        </a>
+        <button class="btn btn-take share phone-only" type="button">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V3"/><path d="m7 8 5-5 5 5"/><path d="M5 13v8h14v-8"/></svg>
+          ส่งลิงก์ไปเปิดที่คอม
+        </button>
+        <p class="send-note phone-only">ไฟล์นี้ใช้กับคอม Windows เปิด <b class="url">jakkitt.github.io/uxplay-mirror</b> บนคอม หรือ<a class="dl" href="#install">ดาวน์โหลดไฟล์ที่นี่</a></p>
+      </div>
     </div>
-    <p class="warn" data-cue style="--i:3"><strong>ก่อนเปิดไฟล์</strong>ไฟล์ยังไม่มีลายเซ็นดิจิทัล Windows จะขึ้นหน้าจอสีน้ำเงิน ให้กด More info แล้วกด Run anyway และถ้าเปิด Smart App Control ไว้ต้องปิดก่อน</p>
-    <dl class="reqs" data-cue style="--i:4">
-      <div><dt>ระบบปฏิบัติการ</dt><dd>Windows 10 / 11 แบบ 64 บิต</dd></div>
-      <div><dt>พื้นที่ว่าง</dt><dd>ประมาณ 2 GB</dd></div>
-      <div><dt>ระหว่างติดตั้ง</dt><dd>ดาวน์โหลดราว 1 GB ต้องต่ออินเทอร์เน็ต</dd></div>
-      <div><dt>อุปกรณ์</dt><dd>iPhone / iPad ที่มี AirPlay</dd></div>
-      <div><dt>เครือข่าย</dt><dd>คอมกับมือถือใช้เราเตอร์เดียวกัน</dd></div>
-    </dl>
+    <div class="final-body">
+      <div class="after" data-cue style="--i:3">
+        <h3>หลังกดดาวน์โหลด</h3>
+        <ol class="checklist">
+          <li><span>เปิดไฟล์ ถ้า Windows ขึ้นหน้าจอสีน้ำเงิน ให้กด <b>More info</b> แล้วกด <b>Run anyway</b></span></li>
+          <li><span>ถ้าตัวติดตั้งแจ้งว่า Smart App Control เปิดอยู่ ต้องปิดก่อน <a href="#install" data-step="2">ดูวิธี</a></span></li>
+          <li><span>กด <b>ติดตั้ง</b> แล้วรอราว 10–20 นาที จากนั้นแชร์จอจาก iPhone ได้เลย</span></li>
+        </ol>
+        <dl class="reqs">
+          <div><dt>ระบบปฏิบัติการ</dt><dd>Windows 10 / 11 แบบ 64 บิต</dd></div>
+          <div><dt>พื้นที่ว่าง</dt><dd>ประมาณ 2 GB</dd></div>
+          <div><dt>ระหว่างติดตั้ง</dt><dd>ต้องต่ออินเทอร์เน็ต</dd></div>
+          <div><dt>อุปกรณ์</dt><dd>iPhone / iPad ที่มี AirPlay</dd></div>
+          <div><dt>เครือข่าย</dt><dd>คอมกับมือถือใช้เราเตอร์เดียวกัน</dd></div>
+        </dl>
+      </div>
+      <figure class="monitor monitor--preview final-shot" data-cue style="--i:4">
+        <span class="tag">หลังติดตั้งเสร็จ</span>
+        <img src="assets/home-ready.png" alt="หน้าหลักของ UxPlay Mirror ขึ้นว่าพร้อมเชื่อมต่อ" width="1080" height="700" loading="lazy">
+      </figure>
+    </div>
     <footer class="credits">
-      <p>UxPlay Mirror ทำงานบน <a href="https://github.com/FDH2/UxPlay">UxPlay</a> (GPLv3) ขอบคุณทีมผู้พัฒนา UxPlay รวมถึง <a href="https://gstreamer.freedesktop.org/">GStreamer</a> และ <a href="https://www.msys2.org/">MSYS2</a> เผยแพร่ภายใต้สัญญาอนุญาต GNU GPL v3 <a id="srcLink" href="#">ดูซอร์สโค้ด</a></p>
+      <p>UxPlay Mirror ทำงานบน <a href="https://github.com/FDH2/UxPlay">UxPlay</a> (GPLv3) ขอบคุณทีมผู้พัฒนา UxPlay รวมถึง <a href="https://gstreamer.freedesktop.org/">GStreamer</a> และ <a href="https://www.msys2.org/">MSYS2</a> เผยแพร่ภายใต้สัญญาอนุญาต <span class="nb">GNU GPL v3</span> <a class="repo" href="https://github.com/Jakkitt/uxplay-mirror">ดูซอร์สโค้ด</a></p>
       <p>โปรเจกต์นี้ไม่มีส่วนเกี่ยวข้องกับ Apple Inc. AirPlay, iPhone และ iPad เป็นเครื่องหมายการค้าของ Apple Inc.</p>
       <p class="wordmark" aria-hidden="true">UxPlay Mirror</p>
     </footer>
@@ -537,21 +609,29 @@
 
 </main>
 
-<nav class="switcher" aria-label="ฉากในหน้านี้">
+<nav class="switcher" aria-label="ส่วนต่างๆ ในหน้านี้">
   <span class="end" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg>iPhone</span>
   <ol id="strip">
     <li><a href="#top"><span class="long">หน้าแรก</span><span class="short">เริ่ม</span></a></li>
-    <li><a href="#features"><span class="long">ทำอะไรได้</span><span class="short">ฟีเจอร์</span></a></li>
+    <li><a href="#features"><span class="long">ทำอะไรได้บ้าง</span><span class="short">ฟีเจอร์</span></a></li>
     <li><a href="#install"><span class="long">วิธีติดตั้ง</span><span class="short">ติดตั้ง</span></a></li>
     <li><a href="#trouble"><span class="long">แก้ปัญหา</span><span class="short">แก้ปัญหา</span></a></li>
-    <li><a href="#faq"><span class="long">คำถาม</span><span class="short">ถาม-ตอบ</span></a></li>
+    <li><a href="#faq"><span class="long">คำถามที่พบบ่อย</span><span class="short">ถาม-ตอบ</span></a></li>
     <li><a href="#download"><span class="long">ดาวน์โหลด</span><span class="short">โหลด</span></a></li>
   </ol>
   <span class="end" aria-hidden="true">คอม<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg></span>
 </nav>
 
+<p class="toast" id="toast" role="status" hidden></p>
+
 <script>
-  document.documentElement.classList.add("js");
+  const root = document.documentElement;
+  root.classList.add("js");
+  const calm = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // Phones and tablets can't run the Windows installer: offer to send the link to a PC instead.
+  const ua = navigator.userAgent;
+  if (/iPhone|iPad|iPod|Android/i.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1)) root.classList.add("phone");
 
   // Set this to "username/repository" if the site runs on your own domain instead of github.io.
   const REPO = "";
@@ -564,30 +644,39 @@
       const first = location.pathname.split("/").filter(Boolean)[0];
       repo = owner + "/" + (first || host);
     }
-    if (repo) {
-      const dl = "https://github.com/" + repo + "/releases/latest/download/UxPlayMirrorSetup.exe";
-      document.querySelectorAll("a.dl").forEach(a => a.href = dl);
-      document.getElementById("repoLink").href = "https://github.com/" + repo;
-      document.getElementById("srcLink").href = "https://github.com/" + repo;
-    } else {
-      document.getElementById("repoLink").style.display = "none";
-      document.getElementById("srcLink").style.display = "none";
-    }
+    if (!repo) repo = "Jakkitt/uxplay-mirror";
+    const base = "https://github.com/" + repo;
+    document.querySelectorAll("a.dl").forEach(a => a.href = base + "/releases/latest/download/UxPlayMirrorSetup.exe");
+    document.querySelectorAll("a.repo").forEach(a => a.href = base);
+    document.querySelectorAll("a.issues").forEach(a => a.href = base + "/issues");
   })();
+  const DL = document.querySelector("a.dl").href;
 
-  // ---------- seven-segment FPS counter ----------
+  // ---------- send the page link to a PC ----------
+  const pageUrl = location.origin + location.pathname;
+  const shortUrl = pageUrl.replace(/^https?:\/\//, "").replace(/\/$/, "");
+  const toast = document.getElementById("toast");
+  let toastTimer;
+  function say(msg) {
+    toast.textContent = msg; toast.hidden = false;
+    clearTimeout(toastTimer); toastTimer = setTimeout(() => toast.hidden = true, 3500);
+  }
+  if (location.protocol.startsWith("http")) document.querySelectorAll(".url").forEach(el => el.textContent = shortUrl);
+  document.querySelectorAll("button.share").forEach(b => b.addEventListener("click", async () => {
+    if (navigator.share) {
+      try { await navigator.share({ title: "UxPlay Mirror", text: "เปิดลิงก์นี้บนคอม Windows เพื่อดาวน์โหลด UxPlay Mirror", url: pageUrl }); return; }
+      catch (e) { if (e.name === "AbortError") return; }
+    }
+    try { await navigator.clipboard.writeText(pageUrl); say("คัดลอกลิงก์แล้ว ส่งเข้าแชตแล้วเปิดบนคอม"); }
+    catch (e) { say("เปิด " + shortUrl + " บนคอม"); }
+  }));
+
+  // ---------- seven-segment FPS readout ----------
   const SEG = { a: "7,1 33,1 28,7 12,7", b: "35,4 35,34 29,30 29,10", c: "35,38 35,68 29,62 29,42", d: "12,65 28,65 33,71 7,71", e: "5,38 11,42 11,62 5,68", f: "5,4 11,10 11,30 5,34", g: "8,36 12,32 28,32 32,36 28,40 12,40" };
   const DIGITS = ["abcdef", "bc", "abdeg", "abcdg", "bcfg", "acdfg", "acdefg", "abc", "abcdefg", "abcdfg"];
-  const fpsBox = document.getElementById("fps");
-  function renderFps(n) {
-    fpsBox.innerHTML = String(n).padStart(2, " ").split("").map(ch => {
-      const lit = ch === " " ? "" : DIGITS[+ch];
-      return '<svg viewBox="0 0 40 72" aria-hidden="true">' + Object.keys(SEG).map(k => '<polygon points="' + SEG[k] + '"' + (lit.includes(k) ? ' class="on"' : "") + "/>").join("") + "</svg>";
-    }).join("");
-  }
-  renderFps(60);
-  const calm = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  if (!calm) setInterval(() => { if (document.body.dataset.scene === "top") renderFps([60, 60, 59, 60, 58, 60][Math.floor(Math.random() * 6)]); }, 1000);
+  document.getElementById("fps").innerHTML = "60".split("").map(ch =>
+    '<svg viewBox="0 0 40 72" aria-hidden="true">' + Object.keys(SEG).map(k => '<polygon points="' + SEG[k] + '"' + (DIGITS[+ch].includes(k) ? ' class="on"' : "") + "/>").join("") + "</svg>"
+  ).join("");
 
   // ---------- feature switcher: pick a source, it goes on the program monitor ----------
   const icons = {
@@ -602,32 +691,37 @@
     check: '<path d="M9 12l2 2 4-4"/><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/>'
   };
   const features = [
-    { id: "fps", label: "ภาพลื่น 60 FPS", img: "mirror.png", alt: "หน้าต่างภาพจาก iPhone พร้อมแถบเครื่องมือที่แสดง 58 FPS", text: "ถอดรหัสด้วยการ์ดจอ หน่วงต่ำ แถบเครื่องมือข้างหน้าต่างบอก FPS ที่ iPhone ส่งมาจริง มีโหมดทดลอง 120 FPS แต่ iPhone ส่วนใหญ่ส่งภาพผ่าน AirPlay ได้สูงสุด 60" },
-    { id: "rotate", label: "หมุนตามมือถือ", img: "phone-window.png", alt: "หน้าต่างภาพที่ปรับขนาดพอดีกับจอ iPhone แนวตั้ง", text: "หมุน iPhone เป็นแนวนอนหรือแนวตั้ง หน้าต่างบนคอมหมุนและปรับขนาดตาม ไม่มีขอบดำเกิน" },
-    { id: "shot", label: "ถ่ายภาพหน้าจอ", img: "home-mirroring.png", pos: "left bottom", alt: "หน้าหลักขณะแชร์จอ มีปุ่มถ่ายภาพหน้าจอ บันทึกวิดีโอ ปากกาวาด และเต็มจอ", zoom: true, text: "กดปุ่มกล้องหรือ Ctrl+Alt+S ได้ไฟล์ภาพ และภาพถูกคัดลอกไว้ให้วางในแชตได้ทันที" },
-    { id: "rec", label: "อัดวิดีโอพร้อมเสียง", img: "home-mirroring.png", pos: "left bottom", alt: "หน้าหลักขณะแชร์จอ มีปุ่มบันทึกวิดีโอ", zoom: true, text: "อัดเป็น MP4 ด้วยการ์ดจอ NVIDIA (NVENC) หรือ Media Foundation ของ Windows เสียงในคลิปเป็นเสียงจาก iPhone อย่างเดียว ไม่ปนเสียงอื่นในคอม" },
-    { id: "pen", label: "ปากกาวาดบนจอ", img: "pen.png", alt: "ภาพจาก iPhone ที่มีเส้นปากกาสีแดงวาดวงรอบและขีดเส้นใต้", text: "ปากกา ไฮไลต์ และยางลบ 6 สี วาดทับภาพจาก iPhone ระหว่างสอนหรือพรีเซนต์ แล้วถ่ายภาพเก็บพร้อมเส้นที่วาดได้" },
-    { id: "music", label: "หน้าจอเพลง", img: "nowplaying.png", alt: "หน้าจอเพลงแสดงปกอัลบั้ม ชื่อเพลง และเวลา", text: "เปิดเพลงผ่าน AirPlay แล้วคอมขึ้นปกอัลบั้ม ชื่อเพลง และเวลาของเพลง เล่น หยุด หรือข้ามเพลงได้จาก iPhone" },
-    { id: "keys", label: "คีย์ลัดจากทุกโปรแกรม", text: "ใช้ได้จากทุกโปรแกรมขณะกำลังแชร์จอ เช่น ระหว่างเล่นเกมหรือเปิดโปรแกรมสตรีมอยู่ ไม่ต้องสลับหน้าต่าง" },
-    { id: "pin", label: "รหัส PIN", img: "settings.png", pos: "center top", alt: "หน้าตั้งค่าที่มีตัวเลือกขอรหัส PIN ก่อนเชื่อมต่อ", zoom: true, text: "เปิดให้ถามรหัส 4 หลักก่อนเชื่อมต่อ กันคนอื่นในวง Wi-Fi เดียวกันแอบแชร์จอขึ้นคอมคุณ" },
-    { id: "check", label: "ตรวจปัญหาให้อัตโนมัติ", img: "help.png", pos: "center top", alt: "หน้าตรวจสอบความพร้อมของระบบที่ผ่านทุกข้อ", zoom: true, text: "เช็กว่าติดตั้ง UxPlay แล้ว ตัวแสดงผลพร้อม เครือข่ายเป็น Private และ Firewall อนุญาต พร้อมคำแนะนำแก้ปัญหา" }
+    { id: "fps", label: "ภาพลื่น 60 FPS", short: "60 FPS", img: "mirror.png", alt: "หน้าต่างภาพจาก iPhone พร้อมแถบเครื่องมือที่แสดง 58 FPS", text: "ถอดรหัสด้วยการ์ดจอ หน่วงต่ำ แถบเครื่องมือข้างหน้าต่างบอก FPS ที่ iPhone ส่งมาจริง มีโหมดทดลอง 120 FPS แต่ iPhone ส่วนใหญ่ส่งภาพผ่าน AirPlay ได้สูงสุด 60" },
+    { id: "rotate", label: "หมุนตามมือถือ", short: "หมุนตาม", img: "phone-window.png", alt: "หน้าต่างภาพที่ปรับขนาดพอดีกับจอ iPhone แนวตั้ง", text: "หมุน iPhone เป็นแนวนอนหรือแนวตั้ง หน้าต่างบนคอมหมุนและปรับขนาดตาม ไม่มีขอบดำเกิน" },
+    { id: "shot", label: "ถ่ายภาพหน้าจอ", short: "ถ่ายภาพ", img: "mirror.png", pos: "right 38%", zoom: true, alt: "แถบเครื่องมือข้างหน้าต่างภาพ มีปุ่มกล้องสำหรับถ่ายภาพหน้าจอ", text: "กดปุ่มกล้องหรือ Ctrl+Alt+S ได้ไฟล์ภาพ และภาพถูกคัดลอกไว้ให้วางในแชตได้ทันที" },
+    { id: "rec", label: "อัดวิดีโอพร้อมเสียง", short: "อัดวิดีโอ", img: "home-mirroring.png", pos: "left bottom", zoom: true, alt: "หน้าหลักขณะแชร์จอ มีปุ่มบันทึกวิดีโอในแถวเครื่องมือ", text: "อัดเป็น MP4 ด้วยการ์ดจอ NVIDIA (NVENC) หรือ Media Foundation ของ Windows เสียงในคลิปเป็นเสียงจาก iPhone อย่างเดียว ไม่ปนเสียงอื่นในคอม" },
+    { id: "pen", label: "ปากกาวาดบนจอ", short: "ปากกา", img: "pen.png", alt: "ภาพจาก iPhone ที่มีเส้นปากกาสีแดงวาดวงรอบและขีดเส้นใต้", text: "ปากกา ไฮไลต์ และยางลบ 6 สี วาดทับภาพจาก iPhone ระหว่างสอนหรือพรีเซนต์ แล้วถ่ายภาพเก็บพร้อมเส้นที่วาดได้" },
+    { id: "music", label: "หน้าจอเพลง", short: "หน้าจอเพลง", img: "nowplaying.png", alt: "หน้าจอเพลงแสดงปกอัลบั้ม ชื่อเพลง และเวลา", text: "เปิดเพลงผ่าน AirPlay แล้วคอมขึ้นปกอัลบั้ม ชื่อเพลง และเวลาของเพลง เล่น หยุด หรือข้ามเพลงได้จาก iPhone" },
+    { id: "keys", label: "คีย์ลัดจากทุกโปรแกรม", short: "คีย์ลัด", text: "ใช้ได้จากทุกโปรแกรมขณะกำลังแชร์จอ เช่น ระหว่างเล่นเกมหรือเปิดโปรแกรมสตรีมอยู่ ไม่ต้องสลับหน้าต่าง" },
+    { id: "pin", label: "รหัส PIN", short: "รหัส PIN", img: "settings.png", pos: "right 32%", zoom: true, alt: "หน้าตั้งค่าที่มีตัวเลือกขอรหัส PIN ก่อนเชื่อมต่อ", text: "เปิดให้ถามรหัส 4 หลักก่อนเชื่อมต่อ กันคนอื่นในวง Wi-Fi เดียวกันแอบแชร์จอขึ้นคอมคุณ" },
+    { id: "check", label: "ตรวจปัญหาให้อัตโนมัติ", short: "ตรวจปัญหา", img: "help.png", pos: "center top", zoom: true, alt: "หน้าตรวจสอบความพร้อมของระบบที่ผ่านทุกข้อ", text: "เช็กว่าติดตั้ง UxPlay แล้ว ตัวแสดงผลพร้อม เครือข่ายเป็น Private และ Firewall อนุญาต พร้อมคำแนะนำแก้ปัญหา" }
   ];
-  const bus = document.getElementById("bus"), fMon = document.getElementById("featureMonitor");
+  const bus = document.getElementById("bus"), fMon = document.getElementById("featureMonitor"), fImg = document.getElementById("featureImg"), fKeys = document.getElementById("featureKeys");
   const fTitle = document.getElementById("featureTitle"), fText = document.getElementById("featureText");
-  const keysHtml = '<div class="keys">' + [["S", "ถ่ายภาพ"], ["R", "เริ่ม/หยุดอัดวิดีโอ"], ["D", "ปากกาวาด"], ["F", "เต็มจอ"]].map(k => '<div><kbd>Ctrl</kbd><kbd>Alt</kbd><kbd>' + k[0] + "</kbd><b>" + k[1] + "</b></div>").join("") + "</div>";
+  fKeys.innerHTML = [["S", "ถ่ายภาพ"], ["R", "เริ่ม/หยุดอัดวิดีโอ"], ["D", "ปากกาวาด"], ["F", "เต็มจอ"]].map(k => "<div><kbd>Ctrl</kbd><kbd>Alt</kbd><kbd>" + k[0] + "</kbd><b>" + k[1] + "</b></div>").join("");
   function showFeature(i, focus) {
     const f = features[i];
     [...bus.children].forEach((b, j) => { b.setAttribute("aria-selected", i === j); b.tabIndex = i === j ? 0 : -1; });
     fMon.setAttribute("aria-labelledby", "tab-" + f.id);
-    const body = f.id === "keys" ? keysHtml : '<img src="assets/' + f.img + '" alt="' + f.alt + '"' + (f.zoom ? ' class="zoom" style="object-position:' + f.pos + '"' : "") + ">";
-    fMon.innerHTML = '<span class="tag">ออกอากาศ</span>' + body;
+    fKeys.hidden = f.id !== "keys";
+    fImg.hidden = f.id === "keys";
+    if (f.img) {
+      fImg.src = "assets/" + f.img; fImg.alt = f.alt;
+      fImg.classList.toggle("zoom", !!f.zoom);
+      fImg.style.objectPosition = f.pos || "";
+    }
     fTitle.textContent = f.label; fText.textContent = f.text;
     if (focus) bus.children[i].focus();
   }
   features.forEach((f, i) => {
     const b = document.createElement("button");
     b.type = "button"; b.id = "tab-" + f.id; b.setAttribute("role", "tab"); b.setAttribute("aria-controls", "featureMonitor");
-    b.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true">' + icons[f.id] + "</svg><span>" + f.label + "</span>";
+    b.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true">' + icons[f.id] + '</svg><span class="long">' + f.label + '</span><span class="short">' + f.short + "</span>";
     b.addEventListener("click", () => showFeature(i));
     bus.appendChild(b);
   });
@@ -643,24 +737,25 @@
   }
   arrowKeys(bus, showFeature);
   showFeature(0);
+  // Warm the cache so switching features never shows an empty monitor.
+  addEventListener("load", () => features.forEach(f => { if (f.img) new Image().src = "assets/" + f.img; }));
 
   // ---------- install rundown ----------
   const steps = [
-    { t: "ดาวน์โหลดตัวติดตั้ง", time: "1 นาที", html: "<p>กดปุ่ม <b>ดาวน์โหลดสำหรับ Windows</b> จะได้ไฟล์ <code>UxPlayMirrorSetup.exe</code> ขนาด 0.4 MB จากหน้า Releases บน GitHub</p>", visual: '<div class="bigfile"><img src="assets/icon-256.png" alt="" width="128" height="128"><code>UxPlayMirrorSetup.exe</code><a class="btn btn-take dl" href="#download">ดาวน์โหลดสำหรับ Windows</a></div>' },
+    { t: "ดาวน์โหลดตัวติดตั้ง", time: "1 นาที", html: "<p>กดปุ่ม <b>ดาวน์โหลดสำหรับ Windows</b> บนคอม จะได้ไฟล์ <code>UxPlayMirrorSetup.exe</code> ขนาด 0.4 MB จากหน้า Releases บน GitHub</p>", visual: '<div class="bigfile"><img src="assets/icon-256.png" alt="" width="128" height="128"><code>UxPlayMirrorSetup.exe</code><a class="btn btn-take dl pc-only" href="' + DL + '">ดาวน์โหลดสำหรับ Windows</a></div>' },
     { t: "ผ่านหน้าจอเตือนสีน้ำเงิน", time: "", html: "<p>เปิดไฟล์ ถ้า Windows ขึ้นว่า <b>Windows protected your PC</b> ให้กด <b>More info</b> แล้วกด <b>Run anyway</b></p><p class=\"warn\"><strong>ทำไม</strong>โปรแกรมยังไม่มีลายเซ็นดิจิทัลแบบเสียเงิน ซอร์สโค้ดทั้งหมดเปิดให้ดูได้บน GitHub</p>", visual: '<div class="smartscreen" role="img" aria-label="ตัวอย่างหน้าจอเตือนของ Windows ที่ต้องกด More info แล้วกด Run anyway"><div class="ss-title">Windows protected your PC</div><div class="ss-body">Microsoft Defender SmartScreen prevented an unrecognized app from starting.</div><span class="ss-link">More info</span><div class="ss-row"><span class="ss-btn">Run anyway</span></div></div>' },
-    { t: "ปิด Smart App Control", time: "ถ้าเปิดอยู่", html: "<p>ถ้าตัวติดตั้งแจ้งว่า Smart App Control เปิดอยู่ ต้องปิดก่อนจึงจะใช้งานได้ เพราะระบบนี้บล็อกไฟล์ของ GStreamer ที่ UxPlay ใช้</p><p class=\"warn\"><strong>คิดก่อนปิด</strong>เมื่อปิดแล้วจะเปิดกลับไม่ได้ ถ้าไม่ติดตั้ง Windows ใหม่</p>", visual: '<div class="path"><span>Windows Security</span><i>→</i><span>App &amp; browser control</span><i>→</i><span>Smart App Control</span><i>→</i><span>Off</span></div>' },
-    { t: "กด “ติดตั้ง” แล้วรอ", time: "10–20 นาที", html: "<p>ตัวติดตั้งจะลง MSYS2 ที่ <code>C:\\msys64</code> และ GStreamer ดาวน์โหลดและ build UxPlay เวอร์ชันล่าสุดในเครื่อง แล้วสร้าง shortcut ให้ ระหว่างนี้ดาวน์โหลดราว 1 GB</p>", visual: '<img src="assets/setup.png" alt="หน้าต่างตัวติดตั้ง UxPlay Mirror แสดงรายการ MSYS2 GStreamer UxPlay และ UxPlay Mirror" loading="lazy">' },
+    { t: "เช็ก Smart App Control", time: "ถ้าเปิดอยู่", html: "<p>เปิด Windows Security แล้วดูตามเส้นทางด้านล่าง ถ้าขึ้นว่า <b>Off</b> อยู่แล้วข้ามขั้นนี้ได้ (Windows 10 ไม่มีระบบนี้) ถ้าเปิดอยู่ต้องปิดก่อน เพราะระบบนี้บล็อกไฟล์ของ GStreamer ที่ UxPlay ใช้</p><p class=\"warn\"><strong>คิดก่อนปิด</strong>เมื่อปิดแล้วจะเปิดกลับไม่ได้ ถ้าไม่ติดตั้ง Windows ใหม่</p>", visual: '<div class="path"><span>Windows Security</span><i>→</i><span>App &amp; browser control</span><i>→</i><span>Smart App Control</span><i>→</i><span>Off</span></div>' },
+    { t: "กด “ติดตั้ง” แล้วรอ", time: "10–20 นาที", html: "<p>ตัวติดตั้งจะลง MSYS2 ที่ <code>C:\\msys64</code> และ GStreamer แล้วดาวน์โหลดและ build UxPlay ในเครื่อง ระหว่างนี้โหลดราว 1 GB บางช่วงอาจดูเหมือนหยุดนิ่งหลายนาที ให้รอจนเสร็จ ถ้าไม่สำเร็จ <a class=\"issues\" href=\"" + document.querySelector("a.issues").href + "\">แจ้งปัญหาบน GitHub</a></p>", visual: '<img src="assets/setup.png" alt="หน้าต่างตัวติดตั้ง UxPlay Mirror แสดงรายการ MSYS2 GStreamer UxPlay และ UxPlay Mirror" width="760" height="560">' },
     { t: "อนุญาตการเชื่อมต่อ", time: "", html: "<p>ตั้งเครือข่ายของคอมเป็น <b>Private</b> และถ้า Windows ถามเรื่อง Firewall ให้ติ๊ก <b>Private</b> แล้วกด <b>Allow</b></p>", visual: '<div class="path"><span>Settings</span><i>→</i><span>Network &amp; internet</span><i>→</i><span>Wi-Fi หรือ Ethernet</span><i>→</i><span>Private network</span></div>' },
-    { t: "แชร์จอจาก iPhone", time: "", html: "<p>ต่อ Wi-Fi เดียวกับคอม ปัดลงเปิดศูนย์ควบคุม แตะ <b>การสะท้อนหน้าจอ</b> แล้วเลือก <b>UxPlay@ชื่อคอม</b></p>", visual: '<img src="assets/home-ready.png" alt="หน้าหลักของ UxPlay Mirror ขึ้นว่าพร้อมเชื่อมต่อ" loading="lazy">' }
+    { t: "แชร์จอจาก iPhone", time: "", html: "<p>ต่อ Wi-Fi เดียวกับคอม ปัดลงจากมุมขวาบนเพื่อเปิดศูนย์ควบคุม แตะ <b>การสะท้อนหน้าจอ</b> แล้วเลือก <b>UxPlay@ชื่อคอม</b> โปรแกรมบนคอมจะขึ้นว่าพร้อมเชื่อมต่อแบบภาพนี้</p>", visual: '<img src="assets/home-ready.png" alt="หน้าหลักของ UxPlay Mirror ขึ้นว่าพร้อมเชื่อมต่อ" width="1080" height="700">' }
   ];
   const rundown = document.getElementById("rundown"), cueText = document.getElementById("cueText"), cueVisual = document.getElementById("cueVisual"), cuePanel = document.getElementById("cuePanel");
   function showStep(i, focus) {
     const s = steps[i];
     [...rundown.querySelectorAll("button")].forEach((b, j) => { b.setAttribute("aria-selected", i === j); b.tabIndex = i === j ? 0 : -1; });
     cuePanel.setAttribute("aria-labelledby", "step-" + i);
-    cueText.innerHTML = "<h3>" + s.t + "</h3>" + s.html;
+    cueText.innerHTML = "<h3>" + (i + 1) + ". " + s.t + "</h3>" + s.html;
     cueVisual.innerHTML = s.visual;
-    cueVisual.querySelectorAll("a.dl").forEach(a => a.href = document.querySelector("a.dl").href);
     if (focus) rundown.querySelectorAll("button")[i].focus();
   }
   steps.forEach((s, i) => {
@@ -673,6 +768,25 @@
   });
   arrowKeys(rundown, showStep);
   showStep(0);
+  addEventListener("load", () => ["setup.png", "home-ready.png"].forEach(n => new Image().src = "assets/" + n));
+
+  // Links like "ขั้นตอนติดตั้งข้อ 3" open that step.
+  document.addEventListener("click", e => {
+    const a = e.target.closest("a[data-step]");
+    if (a) showStep(+a.dataset.step);
+  });
+
+  // After a download starts, walk the visitor straight to what comes next.
+  const handoff = document.getElementById("handoff"), installLede = document.getElementById("installLede");
+  document.addEventListener("click", e => {
+    const a = e.target.closest("a.dl");
+    if (!a || !a.href.startsWith("https://")) return;
+    setTimeout(() => {
+      showStep(1);
+      installLede.hidden = true; handoff.hidden = false;
+      document.getElementById("install").scrollIntoView({ behavior: calm ? "auto" : "smooth" });
+    }, 400);
+  });
 
   // ---------- signal chain lights the hop each question is about ----------
   const chain = document.getElementById("chain");
@@ -689,11 +803,12 @@
     document.querySelectorAll('details[name="' + d.getAttribute("name") + '"]').forEach(o => { if (o !== d) o.open = false; });
   }));
 
-  // ---------- scene cuts: tally, strip, signal line, address bar ----------
+  // ---------- scene cuts: lamp, strip, signal line, history ----------
   const scenes = [...document.querySelectorAll(".scene")];
   const links = [...document.querySelectorAll("#strip a")];
   const lamp = document.getElementById("lamp"), sceneName = document.getElementById("sceneName"), strip = document.getElementById("strip");
-  let current = -1;
+  const urlFor = i => i === 0 ? location.pathname + location.search : "#" + scenes[i].id;
+  let current = -1, pushTimer, quietUntil = 0;
   function cut(i) {
     if (i === current) return;
     current = i;
@@ -702,13 +817,25 @@
     links.forEach((a, j) => { a.setAttribute("aria-current", j === i); a.classList.toggle("next", j === i + 1); });
     strip.style.setProperty("--signal", (i / (scenes.length - 1) * 100) + "%");
     sceneName.textContent = s.dataset.name;
-    document.body.dataset.scene = s.id;
     if (!calm) { lamp.classList.remove("blink"); void lamp.offsetWidth; lamp.classList.add("blink"); }
-    history.replaceState(null, "", i === 0 ? location.pathname + location.search : "#" + s.id);
+    // Each scene the visitor settles on becomes a history entry, so Back retraces the trail.
+    clearTimeout(pushTimer);
+    if (Date.now() < quietUntil) return;
+    pushTimer = setTimeout(() => {
+      const here = location.hash || "";
+      const want = i === 0 ? "" : "#" + s.id;
+      if (here !== want) history.pushState(null, "", urlFor(i));
+    }, 700);
   }
+  addEventListener("popstate", () => {
+    const i = Math.max(0, scenes.findIndex(s => "#" + s.id === location.hash));
+    quietUntil = Date.now() + 1500;
+    scenes[i].scrollIntoView({ behavior: calm ? "auto" : "smooth" });
+  });
   const io = new IntersectionObserver(entries => {
     entries.forEach(e => { if (e.isIntersecting) cut(scenes.indexOf(e.target)); });
   }, { threshold: 0.55 });
+  quietUntil = Date.now() + 1000;
   scenes.forEach(s => io.observe(s));
   cut(Math.max(0, scenes.findIndex(s => "#" + s.id === location.hash)));
 </script>
